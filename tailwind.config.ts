@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -109,6 +111,35 @@ export default {
 				'pulse-slow': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.8' }
+				},
+				"float-slow": {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-20px)' }
+				},
+				"gradient-x": {
+					'0%, 100%': {
+						'background-position': '0% 50%',
+					},
+					'50%': {
+						'background-position': '100% 50%',
+					},
+				},
+				"light-beam": {
+					'0%': { 
+						opacity: '0',
+						transform: 'translateX(-100%) translateY(-100%) rotate(45deg)'
+					},
+					'50%': { 
+						opacity: '0.3',
+					},
+					'100%': { 
+						opacity: '0',
+						transform: 'translateX(100%) translateY(100%) rotate(45deg)'
+					},
+				},
+				"cursor-blink": {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0' },
 				}
 			},
 			animation: {
@@ -121,7 +152,11 @@ export default {
 				'slide-in-right': 'slide-in-right 0.7s ease-out',
 				'counting': 'counting 2s forwards',
 				'float': 'float 6s ease-in-out infinite',
-				'pulse-slow': 'pulse-slow 3s ease-in-out infinite'
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				"float-slow": "float-slow 10s ease-in-out infinite",
+				"gradient-x": "gradient-x 10s ease infinite",
+				"light-beam": "light-beam 8s ease-in-out infinite",
+				"cursor-blink": "cursor-blink 1s step-end infinite",
 			}
 		}
 	},

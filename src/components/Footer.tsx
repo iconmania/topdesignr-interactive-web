@@ -1,7 +1,35 @@
 
-import { Instagram, Twitter, Facebook, Linkedin, ArrowUp } from "lucide-react";
+import { Instagram, Twitter, Facebook, Linkedin, ArrowUp, ChevronRight } from "lucide-react";
+import { useMousePosition } from "@/hooks/useMousePosition";
+import { useState, useRef, useEffect } from "react";
 
 export default function Footer() {
+  const { normalizedX, normalizedY } = useMousePosition();
+  const [year] = useState(new Date().getFullYear());
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const footerRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+  
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -10,158 +38,168 @@ export default function Footer() {
   };
   
   return (
-    <footer className="bg-secondary/50 pt-16 pb-8 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
-          <div>
-            <a href="#" className="text-2xl font-bold tracking-tight text-primary mb-6 inline-block">
+    <footer ref={footerRef} className="bg-black text-white pt-32 pb-8 px-6 md:px-12 relative overflow-hidden">
+      {/* Background Gradient Elements */}
+      <div 
+        className="absolute -top-1/2 -right-1/2 w-full h-full rounded-full bg-primary/10 blur-3xl"
+        style={{
+          transform: `translate(${normalizedX * 20}px, ${normalizedY * 20}px)`,
+          transition: 'transform 0.5s ease-out',
+        }}
+      ></div>
+      
+      <div 
+        className="absolute -bottom-1/2 -left-1/2 w-full h-full rounded-full bg-primary/10 blur-3xl"
+        style={{
+          transform: `translate(${normalizedX * -20}px, ${normalizedY * -20}px)`,
+          transition: 'transform 0.5s ease-out',
+        }}
+      ></div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-20">
+          {/* Logo & Info */}
+          <div className={`md:col-span-4 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}>
+            <a href="#" className="text-4xl font-black tracking-tighter text-white mb-8 inline-block">
               Top<span className="text-gradient">Designr</span>
             </a>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-white/70 text-lg mb-8 font-light max-w-sm">
               Creating exceptional digital experiences
               that drive engagement and deliver results.
             </p>
             <div className="flex space-x-4">
               <a 
                 href="#" 
-                className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                className="w-12 h-12 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:text-black transition-colors duration-300 group relative overflow-hidden"
                 aria-label="Instagram"
+                onMouseEnter={() => setHoveredLink('instagram')}
+                onMouseLeave={() => setHoveredLink(null)}
               >
-                <Instagram className="h-5 w-5" />
+                <span className={`absolute inset-0 bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-500 opacity-0 transition-opacity duration-300 ${hoveredLink === 'instagram' ? 'opacity-100' : ''}`}></span>
+                <Instagram className="h-5 w-5 relative z-10" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                className="w-12 h-12 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:text-black transition-colors duration-300 group relative overflow-hidden"
                 aria-label="Twitter"
+                onMouseEnter={() => setHoveredLink('twitter')}
+                onMouseLeave={() => setHoveredLink(null)}
               >
-                <Twitter className="h-5 w-5" />
+                <span className={`absolute inset-0 bg-gradient-to-tr from-blue-400 to-blue-600 opacity-0 transition-opacity duration-300 ${hoveredLink === 'twitter' ? 'opacity-100' : ''}`}></span>
+                <Twitter className="h-5 w-5 relative z-10" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                className="w-12 h-12 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:text-black transition-colors duration-300 group relative overflow-hidden"
                 aria-label="Facebook"
+                onMouseEnter={() => setHoveredLink('facebook')}
+                onMouseLeave={() => setHoveredLink(null)}
               >
-                <Facebook className="h-5 w-5" />
+                <span className={`absolute inset-0 bg-gradient-to-tr from-blue-600 to-blue-800 opacity-0 transition-opacity duration-300 ${hoveredLink === 'facebook' ? 'opacity-100' : ''}`}></span>
+                <Facebook className="h-5 w-5 relative z-10" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 rounded-full bg-background flex items-center justify-center border border-border hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                className="w-12 h-12 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:text-black transition-colors duration-300 group relative overflow-hidden"
                 aria-label="LinkedIn"
+                onMouseEnter={() => setHoveredLink('linkedin')}
+                onMouseLeave={() => setHoveredLink(null)}
               >
-                <Linkedin className="h-5 w-5" />
+                <span className={`absolute inset-0 bg-gradient-to-tr from-blue-500 to-blue-700 opacity-0 transition-opacity duration-300 ${hoveredLink === 'linkedin' ? 'opacity-100' : ''}`}></span>
+                <Linkedin className="h-5 w-5 relative z-10" />
               </a>
             </div>
           </div>
           
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Services</h3>
+          {/* Services */}
+          <div className={`md:col-span-2 transition-all duration-700 delay-100 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}>
+            <h3 className="text-xl font-bold mb-8 tracking-tight">Services</h3>
             <ul className="space-y-4">
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Strategy & Branding
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  UI/UX Design
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Web Development
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  App Development
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Digital Marketing
-                </a>
-              </li>
+              {["Strategy & Branding", "UI/UX Design", "Web Development", "App Development", "Digital Marketing"].map((item, index) => (
+                <li key={index}>
+                  <a href="#" className="text-white/70 hover:text-white transition-colors duration-300 group flex items-center">
+                    <ChevronRight className="h-4 w-0 opacity-0 group-hover:w-4 group-hover:opacity-100 transition-all duration-300" />
+                    <span>{item}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Company</h3>
+          {/* Company */}
+          <div className={`md:col-span-2 transition-all duration-700 delay-200 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}>
+            <h3 className="text-xl font-bold mb-8 tracking-tight">Company</h3>
             <ul className="space-y-4">
-              <li>
-                <a href="#about" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#work" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Our Work
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors duration-300">
-                  Contact
-                </a>
-              </li>
+              {["About Us", "Our Work", "Careers", "Blog", "Contact"].map((item, index) => (
+                <li key={index}>
+                  <a href={`#${item.toLowerCase().replace(' ', '')}`} className="text-white/70 hover:text-white transition-colors duration-300 group flex items-center">
+                    <ChevronRight className="h-4 w-0 opacity-0 group-hover:w-4 group-hover:opacity-100 transition-all duration-300" />
+                    <span>{item}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Subscribe</h3>
-            <p className="text-muted-foreground mb-4">
+          {/* Subscribe */}
+          <div className={`md:col-span-4 transition-all duration-700 delay-300 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}>
+            <h3 className="text-xl font-bold mb-8 tracking-tight">Subscribe</h3>
+            <p className="text-white/70 mb-6">
               Subscribe to our newsletter to receive updates and insights.
             </p>
-            <form className="flex mb-4">
+            <form className="flex mb-4 overflow-hidden rounded-full border border-white/20 focus-within:border-white transition-colors duration-300">
               <input
                 type="email"
                 placeholder="Your email"
-                className="flex-1 px-4 py-2 rounded-l-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="flex-1 px-6 py-4 bg-transparent text-white outline-none"
                 required
               />
               <button
                 type="submit"
-                className="bg-primary text-primary-foreground px-4 py-2 rounded-r-lg hover:bg-primary/90 transition-colors duration-300"
+                className="bg-white text-black px-6 py-4 font-medium hover:bg-white/90 transition-colors duration-300"
               >
-                Go
+                Subscribe
               </button>
             </form>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/50">
               By subscribing, you agree to our Privacy Policy and consent to receive updates.
             </p>
           </div>
         </div>
         
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-muted-foreground text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} TopDesignr. All rights reserved.
+        {/* Footer Bottom */}
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-white/50 text-sm mb-4 md:mb-0">
+            © {year} TopDesignr. All rights reserved.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 items-center">
+            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors duration-300">
               Privacy Policy
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">
+            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors duration-300">
               Terms of Service
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">
+            <a href="#" className="text-sm text-white/50 hover:text-white transition-colors duration-300">
               Cookie Policy
             </a>
             <button
               onClick={scrollToTop}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300 inline-flex items-center"
+              className="text-white/50 hover:text-white transition-colors duration-300 ml-4 group"
               aria-label="Back to top"
             >
-              Back to top
-              <ArrowUp className="ml-1 h-4 w-4" />
+              <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white/10 transition-colors duration-300">
+                <ArrowUp className="h-4 w-4" />
+              </div>
             </button>
           </div>
         </div>

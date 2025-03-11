@@ -1,4 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,7 +75,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
 
@@ -89,6 +91,10 @@
   
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-foreground;
+  }
+  
+  .text-gradient-animated {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-foreground to-primary bg-size-200 animate-gradient-x;
   }
   
   .glass {
@@ -128,5 +134,27 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  
+  .bg-size-200 {
+    background-size: 200% 200%;
+  }
+  
+  .cursor-text {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewport='0 0 40 40' style='fill:black;font-size:20px;'><text y='50%' x='10%'>T</text></svg>"), auto;
+  }
+  
+  .cursor-design {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewport='0 0 40 40' style='fill:black;font-size:20px;'><text y='50%' x='10%'>D</text></svg>"), auto;
+  }
+  
+  .light-glow {
+    @apply relative overflow-hidden;
+  }
+  
+  .light-glow::after {
+    content: '';
+    @apply absolute top-0 left-0 w-[200%] h-[200%] bg-white/20 -rotate-45 animate-light-beam;
+    pointer-events: none;
   }
 }
