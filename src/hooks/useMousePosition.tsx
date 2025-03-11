@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 
 interface MousePosition {
@@ -18,6 +19,8 @@ export function useMousePosition() {
   const [isMoving, setIsMoving] = useState(false);
   
   useEffect(() => {
+    let timeout: number;
+    
     const updateMousePosition = (ev: MouseEvent) => {
       setMousePosition({
         x: ev.clientX,
@@ -31,7 +34,7 @@ export function useMousePosition() {
       
       // Reset isMoving after some time
       clearTimeout(timeout);
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         setIsMoving(false);
       }, 100);
     };
@@ -45,8 +48,6 @@ export function useMousePosition() {
         normalizedY: prev.y / window.innerHeight - 0.5
       }));
     };
-    
-    let timeout: number;
     
     window.addEventListener("mousemove", updateMousePosition);
     window.addEventListener("resize", handleResize);
