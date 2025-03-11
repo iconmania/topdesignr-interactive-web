@@ -1,7 +1,8 @@
 
 import { useRef, useState, useEffect } from "react";
-import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Quote, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMousePosition } from "@/hooks/useMousePosition";
 
 type Testimonial = {
   id: number;
@@ -49,9 +50,11 @@ const testimonials: Testimonial[] = [
 
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { normalizedX, normalizedY } = useMousePosition();
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -77,99 +80,182 @@ export default function Testimonials() {
     if (isAnimating) return;
     
     setIsAnimating(true);
-    setActiveIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+    setDirection('left');
+    
+    setTimeout(() => {
+      setActiveIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+    }, 300);
     
     setTimeout(() => {
       setIsAnimating(false);
-    }, 500);
+      setDirection(null);
+    }, 600);
   };
   
   const handleNext = () => {
     if (isAnimating) return;
     
     setIsAnimating(true);
-    setActiveIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+    setDirection('right');
+    
+    setTimeout(() => {
+      setActiveIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+    }, 300);
     
     setTimeout(() => {
       setIsAnimating(false);
-    }, 500);
+      setDirection(null);
+    }, 600);
   };
   
   return (
-    <section id="testimonials" ref={sectionRef} className="py-24 px-6 md:px-12 bg-secondary/50">
-      <div className="max-w-7xl mx-auto">
-        <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <div className="glass px-4 py-1 rounded-full inline-flex items-center mb-4">
-            <p className="text-sm">Testimonials</p>
+    <section id="testimonials" ref={sectionRef} className="py-32 px-6 md:px-12 bg-secondary/30 relative overflow-hidden">
+      {/* Background Typography */}
+      <div className="absolute -right-20 bottom-0 opacity-5 pointer-events-none overflow-hidden">
+        <h1 className="text-[30vw] font-black tracking-tighter">
+          SAYS
+        </h1>
+      </div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className={`mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <div className="glass px-4 py-1 rounded-full inline-flex items-center mb-4 bg-background/5 backdrop-blur-md border-0">
+            <p className="text-sm uppercase tracking-widest">Testimonials</p>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">What Our Clients Say</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter leading-none">
+            Client <span className="text-gradient">Feedback</span>
+          </h2>
+          <p className="text-muted-foreground max-w-2xl text-xl font-light">
             Don't just take our word for it—hear what our clients have to say about
             their experiences working with TopDesignr.
           </p>
         </div>
         
-        <div className={`relative max-w-4xl mx-auto transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <div className="bg-background rounded-2xl p-8 md:p-12 border border-border/50 shadow-sm">
-            <Quote className="h-12 w-12 text-primary/20 mb-6" />
-            
-            <div className="min-h-[12rem] flex items-center">
-              <div className={`transition-all duration-500 ${isAnimating ? "opacity-0 translate-y-10" : "opacity-100 translate-y-0"}`}>
-                <p className="text-lg md:text-xl mb-8">
-                  "{testimonials[activeIndex].quote}"
-                </p>
-                
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-                    <img 
-                      src={testimonials[activeIndex].image} 
-                      alt={testimonials[activeIndex].author} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">{testimonials[activeIndex].author}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonials[activeIndex].position}, {testimonials[activeIndex].company}
-                    </p>
-                  </div>
-                </div>
-              </div>
+        <div 
+          className={`relative transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          style={{ 
+            transform: `translate(${normalizedX * -10}px, ${normalizedY * -10}px)`,
+            transition: "transform 0.3s ease-out"
+          }}
+        >
+          <div className="py-16 relative">
+            {/* Large Quote Mark */}
+            <div 
+              className="absolute top-0 left-0 text-[200px] leading-none text-primary/10 font-black pointer-events-none select-none"
+              style={{
+                transform: `translate(${normalizedX * 20}px, ${normalizedY * 20}px)`,
+                transition: "transform 0.4s ease-out"
+              }}
+            >
+              "
             </div>
             
-            <div className="mt-8 flex items-center justify-between">
-              <div className="flex space-x-1">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === activeIndex ? "w-6 bg-primary" : "bg-primary/30"
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
+            {/* Testimonial Carousel */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 items-center">
+              <div className="md:col-span-4 order-2 md:order-1">
+                <div className="relative h-[350px] w-full">
+                  {testimonials.map((testimonial, index) => (
+                    <div 
+                      key={testimonial.id}
+                      className={`absolute inset-0 transition-all duration-700 ${
+                        activeIndex === index 
+                          ? "opacity-100 scale-100" 
+                          : "opacity-0 scale-90 pointer-events-none"
+                      }`}
+                    >
+                      <div className="h-full w-full flex flex-col items-center justify-center relative">
+                        <div 
+                          className="w-64 h-64 rounded-full overflow-hidden border-8 border-background relative mb-6"
+                          style={{
+                            transform: activeIndex === index 
+                              ? `translate(${normalizedX * 15}px, ${normalizedY * 15}px)` 
+                              : "none",
+                            transition: "transform 0.3s ease-out"
+                          }}
+                        >
+                          <img 
+                            src={testimonial.image} 
+                            alt={testimonial.author} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="text-center">
+                          <h4 className="text-2xl font-bold">{testimonial.author}</h4>
+                          <p className="text-muted-foreground">
+                            {testimonial.position}, <br/>
+                            <span className="font-semibold">{testimonial.company}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
               
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handlePrev}
-                  className="h-10 w-10 rounded-full"
-                  aria-label="Previous testimonial"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleNext}
-                  className="h-10 w-10 rounded-full"
-                  aria-label="Next testimonial"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+              <div className="md:col-span-8 order-1 md:order-2">
+                <div className="relative min-h-[220px] flex items-center">
+                  {testimonials.map((testimonial, index) => (
+                    <div 
+                      key={testimonial.id}
+                      className={`w-full absolute transition-all duration-700 ${
+                        activeIndex === index 
+                          ? "opacity-100 translate-x-0" 
+                          : direction === 'right' 
+                            ? "opacity-0 -translate-x-20 pointer-events-none" 
+                            : direction === 'left' 
+                              ? "opacity-0 translate-x-20 pointer-events-none" 
+                              : "opacity-0 translate-x-0 pointer-events-none"
+                      }`}
+                    >
+                      <p className="text-2xl md:text-3xl lg:text-4xl mb-8 font-light leading-relaxed">
+                        "{testimonial.quote}"
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-12 flex items-center justify-between">
+                  <div className="flex space-x-2">
+                    {testimonials.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          if (index < activeIndex) {
+                            setDirection('left');
+                          } else if (index > activeIndex) {
+                            setDirection('right');
+                          }
+                          setActiveIndex(index);
+                        }}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === activeIndex ? "w-10 bg-primary" : "bg-primary/30"
+                        }`}
+                        aria-label={`Go to testimonial ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  
+                  <div className="flex space-x-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handlePrev}
+                      className="w-14 h-14 rounded-full border-2 hover:border-primary group"
+                      aria-label="Previous testimonial"
+                    >
+                      <ArrowLeft className="h-5 w-5 group-hover:scale-125 transition-transform duration-300" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleNext}
+                      className="w-14 h-14 rounded-full border-2 hover:border-primary group"
+                      aria-label="Next testimonial"
+                    >
+                      <ArrowRight className="h-5 w-5 group-hover:scale-125 transition-transform duration-300" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
