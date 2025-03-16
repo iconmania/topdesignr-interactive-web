@@ -30,6 +30,7 @@ export function useMousePosition() {
       const normalizedX = (x / window.innerWidth) - 0.5;
       const normalizedY = (y / window.innerHeight) - 0.5;
       
+      // Direct setting of state for faster response
       setMousePosition({
         x,
         y,
@@ -40,14 +41,14 @@ export function useMousePosition() {
       // Set isMoving to true when mouse moves
       setIsMoving(true);
       
-      // Reset isMoving after some time
+      // Reset isMoving after shorter timeout for faster response
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         setIsMoving(false);
-      }, 50); // Reduced from 100ms to 50ms for faster response
+      }, 30); // Reduced from 50ms to 30ms for faster response
     };
     
-    window.addEventListener("mousemove", updateMousePosition);
+    window.addEventListener("mousemove", updateMousePosition, { passive: true });
     
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);

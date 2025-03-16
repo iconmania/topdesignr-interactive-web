@@ -20,7 +20,7 @@ export default function StyleCursor() {
       }
     };
 
-    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseover', handleMouseOver, { passive: true });
     return () => {
       document.removeEventListener('mouseover', handleMouseOver);
     };
@@ -43,13 +43,14 @@ export default function StyleCursor() {
     <>
       {/* Main cursor */}
       <div
-        className={`fixed pointer-events-none z-[9999] rounded-full transition-transform duration-75 ${
+        className={`fixed pointer-events-none z-[9999] rounded-full transition-transform duration-50 ${
           isMoving ? 'scale-100' : 'scale-90'
         } ${
           hoveredElement ? 'w-8 h-8' : 'w-5 h-5'
         } ${getCursorStyle()}`}
         style={{
-          transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`
+          transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`,
+          transition: 'width 0.1s, height 0.1s',
         }}
       >
         {theme === 'dark' && (
@@ -61,14 +62,14 @@ export default function StyleCursor() {
       
       {/* Secondary cursor/trail effect */}
       <div
-        className={`fixed pointer-events-none z-[9998] rounded-full opacity-30 w-12 h-12 transition-all duration-200 ${
+        className={`fixed pointer-events-none z-[9998] rounded-full opacity-30 w-12 h-12 ${
           theme === 'dark' 
             ? 'border border-cyan-500' 
             : 'border border-blue-400/20 backdrop-blur-sm'
         }`}
         style={{
           transform: `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${isMoving ? 1.2 : 0.8})`,
-          transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+          transition: 'transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1)',
         }}
       />
     </>

@@ -1,6 +1,6 @@
 
 import { useTheme } from "@/context/ThemeContext";
-import { Button } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
@@ -11,7 +11,7 @@ export default function ThemeToggle() {
   };
 
   return (
-    <Button
+    <MagneticButton
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
@@ -24,6 +24,6 @@ export default function ThemeToggle() {
         <Moon className="h-5 w-5 transition-all duration-300" />
       )}
       <span className="sr-only">Toggle theme</span>
-    </Button>
+    </MagneticButton>
   );
 }
