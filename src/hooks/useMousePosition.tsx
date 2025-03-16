@@ -22,16 +22,19 @@ export function useMousePosition() {
     let timeout: ReturnType<typeof setTimeout>;
     
     const updateMousePosition = (ev: MouseEvent) => {
-      // Prevent values that would cause overflow
-      const x = Math.min(ev.clientX, window.innerWidth - 10);
-      // Clamp normalized values between -0.5 and 0.49 to prevent overflow
-      const normalizedX = Math.max(Math.min(x / window.innerWidth - 0.5, 0.49), -0.5);
+      // Prevent values that would cause overflow by clamping them
+      const x = Math.min(Math.max(0, ev.clientX), window.innerWidth);
+      const y = Math.min(Math.max(0, ev.clientY), window.innerHeight);
+      
+      // Normalized values between -0.5 and 0.5
+      const normalizedX = (x / window.innerWidth) - 0.5;
+      const normalizedY = (y / window.innerHeight) - 0.5;
       
       setMousePosition({
         x,
-        y: ev.clientY,
+        y,
         normalizedX,
-        normalizedY: Math.max(Math.min(ev.clientY / window.innerHeight - 0.5, 0.49), -0.5)
+        normalizedY
       });
       
       // Set isMoving to true when mouse moves
@@ -41,25 +44,13 @@ export function useMousePosition() {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         setIsMoving(false);
-      }, 100);
-    };
-    
-    // Update on window resize to keep normalized values accurate
-    const handleResize = () => {
-      // Keep the last position but update normalized values
-      setMousePosition(prev => ({
-        ...prev,
-        normalizedX: Math.max(Math.min(prev.x / window.innerWidth - 0.5, 0.49), -0.5),
-        normalizedY: Math.max(Math.min(prev.y / window.innerHeight - 0.5, 0.49), -0.5)
-      }));
+      }, 50); // Reduced from 100ms to 50ms for faster response
     };
     
     window.addEventListener("mousemove", updateMousePosition);
-    window.addEventListener("resize", handleResize);
     
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
-      window.removeEventListener("resize", handleResize);
       clearTimeout(timeout);
     };
   }, []);

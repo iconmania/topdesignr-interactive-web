@@ -21,7 +21,7 @@ const Index = () => {
     // Fix for horizontal scrolling issue
     document.documentElement.style.overflowX = 'hidden';
     document.body.style.overflowX = 'hidden';
-    document.documentElement.style.width = '100vw';
+    document.documentElement.style.width = '100%';
     
     return () => {
       document.body.classList.remove('use-custom-cursor');

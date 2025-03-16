@@ -57,7 +57,7 @@ export default function Hero() {
           
           <div className="overflow-hidden mb-4">
             <h1 
-              className="text-6xl md:text-8xl lg:text-8xl font-black mb-2 tracking-tighter leading-none"
+              className="text-6xl md:text-8xl lg:text-9xl font-black mb-2 tracking-tighter leading-none"
               style={{ 
                 transform: `translateY(${scrollPosition * 0.2}px)`,
                 transition: "transform 0.2s ease-out"
@@ -75,7 +75,7 @@ export default function Hero() {
           
           <div className="overflow-hidden mb-8">
             <h1 
-              className="text-5xl md:text-7xl lg:text-7xl font-black mb-2 tracking-tighter leading-none"
+              className="text-5xl md:text-7xl lg:text-8xl font-black mb-2 tracking-tighter leading-none"
               style={{ 
                 transform: `translateY(${scrollPosition * 0.1}px)`,
                 transition: "transform 0.3s ease-out"
@@ -105,23 +105,23 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
             <Button 
               size="lg" 
-              className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-500 overflow-hidden"
+              className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-300 overflow-hidden hover:shadow-lg"
             >
-              <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2">
+              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-2">
                 VIEW OUR WORK
               </span>
-              <span className="absolute inset-0 bg-primary z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
+              <span className="absolute inset-0 bg-primary z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300"></span>
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-500 overflow-hidden"
+              className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-300 overflow-hidden hover:shadow-md"
             >
-              <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2 flex items-center">
+              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-2 flex items-center">
                 CONTACT US 
-                <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0" />
+                <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-[-10px] group-hover:translate-x-0" />
               </span>
-              <span className="absolute inset-0 bg-primary/10 z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
+              <span className="absolute inset-0 bg-primary/10 z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300"></span>
             </Button>
           </div>
         </div>

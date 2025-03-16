@@ -77,23 +77,23 @@ const StatItem = ({ value, label, suffix = "", delay = 0 }: StatItemProps) => {
   return (
     <div 
       ref={ref} 
-      className="flex-1 p-8 relative transition-all duration-500 overflow-hidden text-center"
+      className="flex-1 p-6 md:p-8 relative transition-all duration-300 text-center"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className={`relative z-10 transition-all duration-500 ${isHovering ? 'scale-110' : 'scale-100'}`}>
-        <div className="text-6xl md:text-7xl lg:text-8xl font-black mb-4 relative">
-          <span className="text-gradient-animated">{displayed}</span>
-          <span className="text-gradient-animated">{suffix}</span>
-          <span className={`inline-block w-2 h-14 bg-primary ml-1 align-bottom ${isHovering ? 'animate-cursor-blink' : ''}`}></span>
+      <div className={`relative z-10 transition-all duration-300 ${isHovering ? 'scale-105' : 'scale-100'}`}>
+        <div className="text-5xl md:text-6xl lg:text-7xl font-black mb-4 relative">
+          <span className="text-primary">{displayed}</span>
+          <span className="text-primary">{suffix}</span>
+          <span className={`inline-block w-2 h-10 bg-primary ml-1 align-bottom ${isHovering ? 'animate-cursor-blink' : ''}`}></span>
         </div>
         <div className="text-md md:text-lg text-muted-foreground font-light tracking-wide uppercase">
           {label}
         </div>
       </div>
       
-      {/* Interactive background effect */}
-      <div className={`absolute inset-0 bg-primary/5 transition-all duration-500 ease-out ${isHovering ? 'opacity-100' : 'opacity-0'}`}></div>
+      {/* Simple hover effect */}
+      <div className={`absolute inset-0 bg-primary/5 rounded-xl transition-all duration-300 ease-out ${isHovering ? 'opacity-100' : 'opacity-0'}`}></div>
     </div>
   );
 };
@@ -126,24 +126,18 @@ export default function Stats() {
       <div 
         className="absolute pointer-events-none rounded-full bg-gradient-to-r from-primary/10 to-accent-foreground/10 mix-blend-overlay blur-3xl"
         style={{
-          width: '40vw',
-          height: '40vw',
-          left: `calc(${normalizedX * 100 + 50}% - 20vw)`,
-          top: `calc(${normalizedY * 100 + 50}% - 20vw)`,
+          width: '30vw',
+          height: '30vw',
+          left: `calc(${normalizedX * 100 + 50}% - 15vw)`,
+          top: `calc(${normalizedY * 100 + 50}% - 15vw)`,
           opacity: isInView ? 0.6 : 0,
           transition: 'opacity 0.5s ease-out',
         }}
       ></div>
       
-      {/* Decorative typography */}
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-        <div className="text-[25vw] font-black text-primary/[0.02] tracking-tighter select-none">
-          STATS
-        </div>
-      </div>
-      
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 light-glow">
+        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center">Our Numbers <span className="text-gradient">Speak</span></h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatItem value={10} label="Years Experience" suffix="+" delay={0} />
           <StatItem value={134} label="Returning Clients" suffix="+" delay={200} />
           <StatItem value={400} label="Successful Projects" suffix="+" delay={400} />
