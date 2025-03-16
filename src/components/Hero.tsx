@@ -25,6 +25,7 @@ export default function Hero() {
     <section 
       id="home" 
       ref={heroRef}
+      data-cursor="text"
       className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-background"
     >
       {/* Animated Typography Background Elements */}
@@ -38,37 +39,6 @@ export default function Hero() {
         <h1 className="text-[25vw] font-black tracking-tighter text-primary/10 mix-blend-difference animate-float" style={{ animationDelay: "0.5s" }}>
           DESIGNR
         </h1>
-      </div>
-      
-      {/* Animated Typographic Elements */}
-      <div className="absolute h-full w-full overflow-hidden">
-        <div 
-          className="absolute top-1/4 left-[10%] text-6xl font-black opacity-10 tracking-tighter animate-float"
-          style={{ 
-            transform: `translate(${normalizedX * 20}px, ${normalizedY * 20}px) rotate(${normalizedX * 5}deg)`,
-            animationDelay: "0.3s"
-          }}
-        >
-          CREATE
-        </div>
-        <div 
-          className="absolute bottom-1/3 right-[15%] text-7xl font-black opacity-10 tracking-tighter animate-float"
-          style={{ 
-            transform: `translate(${normalizedX * -30}px, ${normalizedY * -30}px) rotate(${normalizedY * -5}deg)`,
-            animationDelay: "0.7s"
-          }}
-        >
-          INNOVATE
-        </div>
-        <div 
-          className="absolute top-[60%] left-[25%] text-5xl font-black opacity-10 tracking-tighter animate-float"
-          style={{ 
-            transform: `translate(${normalizedX * 15}px, ${normalizedY * 15}px) rotate(${normalizedX * -3}deg)`,
-            animationDelay: "1s"
-          }}
-        >
-          DESIGN
-        </div>
       </div>
       
       {/* Main Content */}
@@ -87,7 +57,7 @@ export default function Hero() {
           
           <div className="overflow-hidden mb-4">
             <h1 
-              className="text-6xl md:text-8xl lg:text-9xl font-black mb-2 tracking-tighter leading-none"
+              className="text-6xl md:text-8xl lg:text-8xl font-black mb-2 tracking-tighter leading-none"
               style={{ 
                 transform: `translateY(${scrollPosition * 0.2}px)`,
                 transition: "transform 0.2s ease-out"
@@ -99,20 +69,13 @@ export default function Hero() {
                   transform: `translate(${normalizedX * 10}px, ${normalizedY * 10}px)`,
                   transition: "transform 0.3s ease-out"
                 }}
-              >WE</span> 
-              <span 
-                className="inline-block ml-6 text-gradient"
-                style={{ 
-                  transform: `translate(${normalizedX * -15}px, ${normalizedY * -15}px)`,
-                  transition: "transform 0.3s ease-out"
-                }}
-              >CREATE</span>
+              >WE CREATE</span> 
             </h1>
           </div>
           
-          <div className="overflow-hidden mb-4">
+          <div className="overflow-hidden mb-8">
             <h1 
-              className="text-5xl md:text-7xl lg:text-8xl font-black mb-2 tracking-tighter leading-none"
+              className="text-5xl md:text-7xl lg:text-7xl font-black mb-2 tracking-tighter leading-none"
               style={{ 
                 transform: `translateY(${scrollPosition * 0.1}px)`,
                 transition: "transform 0.3s ease-out"
@@ -121,22 +84,15 @@ export default function Hero() {
               <span 
                 className="inline-block text-gradient"
                 style={{ 
-                  transform: `translate(${normalizedX * 20}px, ${normalizedY * 20}px)`,
+                  transform: `translate(${normalizedX * 10}px, ${normalizedY * 10}px)`,
                   transition: "transform 0.4s ease-out"
                 }}
-              >DIGITAL</span> 
-              <span 
-                className="inline-block ml-6"
-                style={{ 
-                  transform: `translate(${normalizedX * -10}px, ${normalizedY * -10}px)`,
-                  transition: "transform 0.4s ease-out"
-                }}
-              >EXPERIENCES</span>
+              >DIGITAL EXPERIENCES</span> 
             </h1>
           </div>
           
           <p 
-            className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed font-light mt-8"
+            className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-16 leading-relaxed font-light"
             style={{ 
               transform: `translate(${normalizedX * -5}px, ${normalizedY * -5}px)`,
               transition: "transform 0.2s ease-out"
@@ -149,23 +105,23 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
             <Button 
               size="lg" 
-              className="group overflow-hidden relative px-8 py-7 text-lg font-medium tracking-wider"
+              className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-500 overflow-hidden"
             >
-              <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-500">
+              <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2">
                 VIEW OUR WORK
               </span>
-              <span className="absolute inset-0 bg-primary z-0 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></span>
+              <span className="absolute inset-0 bg-primary z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="group overflow-hidden relative px-8 py-7 text-lg font-medium tracking-wider"
+              className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-500 overflow-hidden"
             >
-              <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-500 flex items-center">
+              <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2 flex items-center">
                 CONTACT US 
                 <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0" />
               </span>
-              <span className="absolute inset-0 bg-primary/10 z-0 translate-x-[-110%] group-hover:translate-x-0 transition-transform duration-500"></span>
+              <span className="absolute inset-0 bg-primary/10 z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
             </Button>
           </div>
         </div>

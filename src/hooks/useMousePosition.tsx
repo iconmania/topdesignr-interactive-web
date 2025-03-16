@@ -22,10 +22,14 @@ export function useMousePosition() {
     let timeout: ReturnType<typeof setTimeout>;
     
     const updateMousePosition = (ev: MouseEvent) => {
+      // Clamp values to prevent overflow
+      const x = Math.min(ev.clientX, window.innerWidth - 5);
+      const normalizedX = Math.min(x / window.innerWidth - 0.5, 0.49);
+      
       setMousePosition({
-        x: ev.clientX,
+        x,
         y: ev.clientY,
-        normalizedX: ev.clientX / window.innerWidth - 0.5,
+        normalizedX,
         normalizedY: ev.clientY / window.innerHeight - 0.5
       });
       
@@ -44,7 +48,7 @@ export function useMousePosition() {
       // Keep the last position but update normalized values
       setMousePosition(prev => ({
         ...prev,
-        normalizedX: prev.x / window.innerWidth - 0.5,
+        normalizedX: Math.min(prev.x / window.innerWidth - 0.5, 0.49),
         normalizedY: prev.y / window.innerHeight - 0.5
       }));
     };

@@ -37,7 +37,7 @@ export default function About() {
   }, []);
   
   return (
-    <section id="about" ref={sectionRef} className="py-32 px-6 md:px-12 bg-secondary/30 relative overflow-hidden cursor-text">
+    <section id="about" ref={sectionRef} className="py-32 px-6 md:px-12 bg-secondary/30 relative overflow-hidden" data-cursor="text">
       {/* Interactive mouse glow effect */}
       <div 
         className="absolute pointer-events-none rounded-full bg-primary/5 mix-blend-overlay blur-3xl"
@@ -150,19 +150,6 @@ export default function About() {
                 className="w-full h-full" 
                 xmlns="http://www.w3.org/2000/svg"
               >
-                {/* Background Circle with parallax effect */}
-                <circle 
-                  cx="300" 
-                  cy="300" 
-                  r="250" 
-                  className="fill-secondary stroke-primary/20" 
-                  style={{ 
-                    strokeWidth: "1",
-                    transform: `translate(${normalizedX * 20}px, ${normalizedY * 20}px)`,
-                    transition: "transform 0.3s ease-out"
-                  }}
-                />
-                
                 {/* Animated Grid Pattern */}
                 <g className="stroke-primary/10">
                   {Array.from({ length: 12 }).map((_, i) => (

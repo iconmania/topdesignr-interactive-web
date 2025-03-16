@@ -77,12 +77,12 @@ const StatItem = ({ value, label, suffix = "", delay = 0 }: StatItemProps) => {
   return (
     <div 
       ref={ref} 
-      className="flex-1 p-8 relative transition-all duration-500 overflow-hidden"
+      className="flex-1 p-8 relative transition-all duration-500 overflow-hidden text-center"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className={`relative z-10 transition-all duration-500 ${isHovering ? 'scale-110' : 'scale-100'}`}>
-        <div className="text-6xl md:text-7xl lg:text-8xl font-black mb-2 relative">
+        <div className="text-6xl md:text-7xl lg:text-8xl font-black mb-4 relative">
           <span className="text-gradient-animated">{displayed}</span>
           <span className="text-gradient-animated">{suffix}</span>
           <span className={`inline-block w-2 h-14 bg-primary ml-1 align-bottom ${isHovering ? 'animate-cursor-blink' : ''}`}></span>
@@ -94,10 +94,6 @@ const StatItem = ({ value, label, suffix = "", delay = 0 }: StatItemProps) => {
       
       {/* Interactive background effect */}
       <div className={`absolute inset-0 bg-primary/5 transition-all duration-500 ease-out ${isHovering ? 'opacity-100' : 'opacity-0'}`}></div>
-      
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-20 h-20 -translate-y-1/2 translate-x-1/2 rounded-full bg-primary/5 mix-blend-overlay"></div>
-      <div className="absolute bottom-0 left-0 w-16 h-16 translate-y-1/2 -translate-x-1/2 rounded-full bg-primary/10 mix-blend-overlay"></div>
     </div>
   );
 };
@@ -125,7 +121,7 @@ export default function Stats() {
   }, []);
   
   return (
-    <section id="stats" ref={sectionRef} className="py-24 px-6 md:px-12 relative cursor-text">
+    <section id="stats" ref={sectionRef} className="py-24 px-6 md:px-12 relative cursor-text" data-cursor="text">
       {/* Mouse light glow effect */}
       <div 
         className="absolute pointer-events-none rounded-full bg-gradient-to-r from-primary/10 to-accent-foreground/10 mix-blend-overlay blur-3xl"

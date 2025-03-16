@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Mail, Phone, Send, MousePointer } from "lucide-react";
+import { MapPin, Mail, Phone, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMousePosition } from "@/hooks/useMousePosition";
 
@@ -58,43 +58,30 @@ export default function Contact() {
   };
   
   return (
-    <section id="contact" ref={sectionRef} className="py-24 px-6 md:px-12 relative">
-      {/* Background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div 
-          className="absolute top-0 right-0 w-1/3 h-1/2 bg-primary/5 rounded-bl-[100px]"
-          style={{
-            transform: `translate(${normalizedX * 20}px, ${normalizedY * 20}px)`,
-            transition: 'transform 0.4s ease-out',
-          }}
-        ></div>
-        <div 
-          className="absolute bottom-0 left-0 w-1/4 h-1/3 bg-primary/5 rounded-tr-[100px]"
-          style={{
-            transform: `translate(${normalizedX * -20}px, ${normalizedY * -20}px)`,
-            transition: 'transform 0.4s ease-out',
-          }}
-        ></div>
-      </div>
-      
-      {/* Custom cursor */}
+    <section id="contact" ref={sectionRef} className="py-24 px-6 md:px-12 relative" data-cursor="text">
+      {/* Background blur elements */}
       <div 
-        className="fixed pointer-events-none w-12 h-12 rounded-full border-2 border-primary z-50 hidden md:block opacity-0"
+        className="absolute left-10 top-20 w-[20vw] h-[20vw] rounded-full bg-primary/5 blur-3xl pointer-events-none"
         style={{
-          transform: `translate(${normalizedX * window.innerWidth}px, ${normalizedY * window.innerHeight}px) translate(-50%, -50%) scale(${activeField ? 0.5 : 1})`,
-          opacity: activeField ? 0.7 : 0,
-          transition: 'transform 0.1s ease-out, opacity 0.3s ease-out',
+          transform: `translate(${normalizedX * -30}px, ${normalizedY * -30}px)`,
+          transition: 'transform 0.5s ease-out',
         }}
-      >
-        <MousePointer className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-      </div>
+      ></div>
+      
+      <div 
+        className="absolute right-10 bottom-20 w-[25vw] h-[25vw] rounded-full bg-accent/5 blur-3xl pointer-events-none"
+        style={{
+          transform: `translate(${normalizedX * 30}px, ${normalizedY * 30}px)`,
+          transition: 'transform 0.5s ease-out',
+        }}
+      ></div>
       
       <div className="max-w-7xl mx-auto relative z-10">
         <div className={`text-center mb-20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className="glass px-4 py-1 rounded-full inline-flex items-center mb-4">
-            <p className="text-sm">Get in Touch</p>
+            <p className="text-sm uppercase tracking-widest">Get in Touch</p>
           </div>
-          <h2 className="text-6xl md:text-7xl font-black mb-6 tracking-tighter">Contact Us</h2>
+          <h2 className="text-6xl md:text-7xl font-black mb-6 tracking-tighter">Contact <span className="text-gradient">Us</span></h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-xl font-light">
             Have a project in mind or want to learn more about our services?
             We'd love to hear from you. Reach out and let's start a conversation.
@@ -102,14 +89,14 @@ export default function Contact() {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-          <div className={`lg:col-span-3 bg-background rounded-2xl p-8 md:p-12 border border-border/50 shadow-sm transition-all duration-700 delay-200 ${
+          <div className={`lg:col-span-3 bg-card/50 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-border/50 shadow-sm transition-all duration-700 delay-200 ${
             isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
           }`}>
             <h3 className="text-3xl font-bold mb-10 tracking-tight">Send Us a Message</h3>
             
             <form onSubmit={handleSubmit} className="space-y-8">
               <div 
-                className={`space-y-2 light-glow ${activeField === 'name' ? 'opacity-100' : 'opacity-90'}`}
+                className={`space-y-2 ${activeField === 'name' ? 'scale-[1.02]' : 'scale-100'} transition-transform duration-300`}
                 onFocus={() => setActiveField('name')}
                 onBlur={() => setActiveField(null)}
               >
@@ -122,12 +109,12 @@ export default function Contact() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
                   required
-                  className="w-full border-2 h-14 px-6 text-lg transition-all duration-300 bg-transparent focus:border-primary"
+                  className="w-full border h-14 px-6 text-lg transition-all duration-300 bg-transparent focus:border-primary rounded-xl"
                 />
               </div>
               
               <div 
-                className={`space-y-2 light-glow ${activeField === 'email' ? 'opacity-100' : 'opacity-90'}`}
+                className={`space-y-2 ${activeField === 'email' ? 'scale-[1.02]' : 'scale-100'} transition-transform duration-300`}
                 onFocus={() => setActiveField('email')}
                 onBlur={() => setActiveField(null)}
               >
@@ -141,12 +128,12 @@ export default function Contact() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="john@example.com"
                   required
-                  className="w-full border-2 h-14 px-6 text-lg transition-all duration-300 bg-transparent focus:border-primary"
+                  className="w-full border h-14 px-6 text-lg transition-all duration-300 bg-transparent focus:border-primary rounded-xl"
                 />
               </div>
               
               <div 
-                className={`space-y-2 light-glow ${activeField === 'message' ? 'opacity-100' : 'opacity-90'}`}
+                className={`space-y-2 ${activeField === 'message' ? 'scale-[1.02]' : 'scale-100'} transition-transform duration-300`}
                 onFocus={() => setActiveField('message')}
                 onBlur={() => setActiveField(null)}
               >
@@ -159,17 +146,20 @@ export default function Contact() {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tell us about your project..."
                   required
-                  className="w-full min-h-[200px] p-6 text-lg border-2 transition-all duration-300 bg-transparent focus:border-primary"
+                  className="w-full min-h-[200px] p-6 text-lg border transition-all duration-300 bg-transparent focus:border-primary rounded-xl"
                 />
               </div>
               
               <Button 
                 type="submit" 
-                className="w-full button-animation h-16 text-lg font-medium tracking-wider"
+                className="w-full group relative overflow-hidden h-16 text-lg font-medium tracking-wider rounded-xl"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
-                <Send className="ml-2 h-5 w-5" />
+                <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2 flex items-center justify-center">
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                  <Send className="ml-2 h-5 w-5 transition-all duration-300 group-hover:translate-x-1" />
+                </span>
+                <span className="absolute inset-0 bg-primary z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
               </Button>
             </form>
           </div>
@@ -177,7 +167,7 @@ export default function Contact() {
           <div className={`lg:col-span-2 transition-all duration-700 delay-300 ${
             isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
           }`}>
-            <div className="bg-background rounded-2xl p-8 md:p-12 border border-border/50 shadow-sm mb-8">
+            <div className="bg-card/50 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-border/50 shadow-sm mb-8">
               <h3 className="text-3xl font-bold mb-10 tracking-tight">Contact Information</h3>
               
               <div className="space-y-10">
@@ -228,7 +218,7 @@ export default function Contact() {
               </div>
             </div>
             
-            <div className="bg-background rounded-2xl overflow-hidden h-[300px] border border-border/50 shadow-sm relative">
+            <div className="bg-card/50 backdrop-blur-md rounded-2xl overflow-hidden h-[300px] border border-border/50 shadow-sm relative">
               <div className="absolute inset-0 bg-primary/5 z-10 pointer-events-none"></div>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100940.14245968247!2d-122.43759999999999!3d37.75769999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1623256242502!5m2!1sen!2sus"

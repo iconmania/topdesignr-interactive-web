@@ -10,11 +10,23 @@ import Testimonials from "@/components/Testimonials";
 import CallToAction from "@/components/CallToAction";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import StyleCursor from "@/components/StyleCursor";
+import { useEffect } from "react";
 
 const Index = () => {
+  // Add custom cursor class to body
+  useEffect(() => {
+    document.body.classList.add('use-custom-cursor');
+    
+    return () => {
+      document.body.classList.remove('use-custom-cursor');
+    };
+  }, []);
+  
   return (
     <ThemeProvider>
-      <div className="min-h-screen w-full">
+      <div className="min-h-screen w-full overflow-x-hidden">
+        <StyleCursor />
         <Navbar />
         <main>
           <Hero />

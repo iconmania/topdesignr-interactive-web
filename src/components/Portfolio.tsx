@@ -106,13 +106,13 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   const getSizeClasses = () => {
     switch (project.size) {
       case "large":
-        return "col-span-12 md:col-span-12 h-screen";
+        return "col-span-12 md:col-span-12 h-[80vh] md:h-screen";
       case "medium":
-        return "col-span-12 md:col-span-8 h-[90vh]";
+        return "col-span-12 md:col-span-8 h-[60vh] md:h-[90vh]";
       case "small":
-        return "col-span-12 md:col-span-4 h-[70vh]";
+        return "col-span-12 md:col-span-4 h-[50vh] md:h-[70vh]";
       default:
-        return "col-span-12 md:col-span-6 h-[80vh]";
+        return "col-span-12 md:col-span-6 h-[60vh] md:h-[80vh]";
     }
   };
   
@@ -132,9 +132,10 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
   return (
     <div 
       ref={cardRef}
+      data-cursor="design"
       className={`group relative overflow-hidden transition-all duration-700 ${getSizeClasses()} ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
-      } cursor-design`}
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{ 
@@ -189,11 +190,6 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
             </div>
           </div>
         </div>
-      </div>
-      
-      {/* Project number typography in background */}
-      <div className="absolute bottom-0 right-0 p-10 opacity-20 pointer-events-none">
-        <span className="text-[20vw] font-black text-white leading-none">{index + 1}</span>
       </div>
     </div>
   );
