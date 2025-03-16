@@ -1,105 +1,70 @@
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-type Theme = "light" | "dark" | "system";
-type StyleTheme = "cyber" | "premium";
+type ThemeType = "light" | "dark";
+type StyleThemeType = "premium" | "cyber";
+
+interface ThemeContextType {
+  theme: ThemeType;
+  styleTheme: StyleThemeType;
+  setTheme: (theme: ThemeType) => void;
+  setStyleTheme: (styleTheme: StyleThemeType) => void;
+}
+
+const ThemeContext = createContext<ThemeContextType>({
+  theme: "light",
+  styleTheme: "premium",
+  setTheme: () => {},
+  setStyleTheme: () => {},
+});
+
+export const useTheme = () => useContext(ThemeContext);
 
 interface ThemeProviderProps {
   children: React.ReactNode;
-  defaultTheme?: Theme;
-  defaultStyleTheme?: StyleTheme;
-  storageKey?: string;
-  styleStorageKey?: string;
+  defaultTheme?: ThemeType;
+  defaultStyleTheme?: StyleThemeType;
 }
 
-interface ThemeContextType {
-  theme: Theme;
-  styleTheme: StyleTheme;
-  setTheme: (theme: Theme) => void;
-  setStyleTheme: (styleTheme: StyleTheme) => void;
-}
-
-const initialState: ThemeContextType = {
-  theme: "system",
-  styleTheme: "premium",
-  setTheme: () => null,
-  setStyleTheme: () => null,
-};
-
-const ThemeContext = createContext<ThemeContextType>(initialState);
-
-export function ThemeProvider({
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
-  defaultTheme = "system",
+  defaultTheme = "light",
   defaultStyleTheme = "premium",
-  storageKey = "theme",
-  styleStorageKey = "styleTheme",
-  ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const storedTheme = localStorage.getItem(storageKey);
-    if (storedTheme) {
-      return storedTheme as Theme;
-    }
-    return defaultTheme;
-  });
-  
-  const [styleTheme, setStyleTheme] = useState<StyleTheme>(() => {
-    const storedStyleTheme = localStorage.getItem(styleStorageKey);
-    if (storedStyleTheme) {
-      return storedStyleTheme as StyleTheme;
-    }
-    return defaultStyleTheme;
-  });
+}) => {
+  const [theme, setTheme] = useState<ThemeType>(
+    () => (localStorage.getItem("theme") as ThemeType) || defaultTheme
+  );
+
+  const [styleTheme, setStyleTheme] = useState<StyleThemeType>(
+    () => (localStorage.getItem("styleTheme") as StyleThemeType) || defaultStyleTheme
+  );
 
   useEffect(() => {
     const root = window.document.documentElement;
+    
+    // Remove old themes
     root.classList.remove("light", "dark");
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      return;
-    }
-
+    root.classList.remove("premium", "cyber");
+    
+    // Add new themes
     root.classList.add(theme);
-  }, [theme]);
-  
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove("cyber-theme", "premium-theme");
-    root.classList.add(`${styleTheme}-theme`);
-  }, [styleTheme]);
+    root.classList.add(styleTheme);
+    
+    // Store in localStorage
+    localStorage.setItem("theme", theme);
+    localStorage.setItem("styleTheme", styleTheme);
+  }, [theme, styleTheme]);
 
   const value = {
     theme,
     styleTheme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
-    },
-    setStyleTheme: (styleTheme: StyleTheme) => {
-      localStorage.setItem(styleStorageKey, styleTheme);
-      setStyleTheme(styleTheme);
-    },
+    setTheme,
+    setStyleTheme,
   };
 
   return (
-    <ThemeContext.Provider {...props} value={value}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
-}
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-
-  if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
-  }
-
-  return context;
 };

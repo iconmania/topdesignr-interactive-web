@@ -18,14 +18,22 @@ const Index = () => {
   useEffect(() => {
     document.body.classList.add('use-custom-cursor');
     
+    // Fix for horizontal scrolling issue
+    document.documentElement.style.overflowX = 'hidden';
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.width = '100vw';
+    
     return () => {
       document.body.classList.remove('use-custom-cursor');
+      document.documentElement.style.overflowX = '';
+      document.body.style.overflowX = '';
+      document.documentElement.style.width = '';
     };
   }, []);
   
   return (
     <ThemeProvider>
-      <div className="min-h-screen w-full overflow-x-hidden">
+      <div className="min-h-screen w-full overflow-hidden">
         <StyleCursor />
         <Navbar />
         <main>

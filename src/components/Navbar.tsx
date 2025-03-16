@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
+import StyleThemeToggle from "./StyleThemeToggle";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,7 +41,7 @@ export default function Navbar() {
           Top<span className="text-gradient">Designr</span>
         </a>
         
-        <nav className="hidden md:flex space-x-8 items-center">
+        <nav className="hidden md:flex space-x-6 items-center">
           <a href="#home" className="text-sm font-medium hover:text-primary/80 transition-colors">
             Home
           </a>
@@ -60,11 +61,13 @@ export default function Navbar() {
             Contact
           </a>
           <ThemeToggle />
+          <StyleThemeToggle />
           <Button className="button-animation">Get Started</Button>
         </nav>
         
         <div className="flex items-center md:hidden space-x-4">
           <ThemeToggle />
+          <StyleThemeToggle />
           <Button 
             variant="ghost" 
             size="icon" 

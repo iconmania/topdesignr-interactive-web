@@ -1,102 +1,76 @@
 
-import { useEffect, useState } from "react";
 import { useMousePosition } from "@/hooks/useMousePosition";
+import { useTheme } from "@/context/ThemeContext";
+import { useEffect, useState } from "react";
 
 export default function StyleCursor() {
   const { x, y, isMoving } = useMousePosition();
-  const [cursorType, setCursorType] = useState<"default" | "design" | "text">("default");
-  const [isVisible, setIsVisible] = useState(false);
-  
+  const { styleTheme } = useTheme();
+  const [hoveredElement, setHoveredElement] = useState<string | null>(null);
+
   useEffect(() => {
-    const handleMouseEnter = () => setIsVisible(true);
-    const handleMouseLeave = () => setIsVisible(false);
-    
-    const trackCursorType = () => {
-      const elements = document.querySelectorAll("[data-cursor]");
-      const handleMouseOver = (e: Event) => {
-        const target = e.currentTarget as HTMLElement;
-        const cursorType = target.dataset.cursor as "default" | "design" | "text";
-        setCursorType(cursorType || "default");
-      };
-      
-      const handleMouseOut = () => {
-        setCursorType("default");
-      };
-      
-      elements.forEach(element => {
-        element.addEventListener("mouseover", handleMouseOver);
-        element.addEventListener("mouseout", handleMouseOut);
-      });
-      
-      return () => {
-        elements.forEach(element => {
-          element.removeEventListener("mouseover", handleMouseOver);
-          element.removeEventListener("mouseout", handleMouseOut);
-        });
-      };
+    // Track when mouse is over clickable elements
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'BUTTON' || target.tagName === 'A' || 
+          target.closest('button') || target.closest('a')) {
+        setHoveredElement(target.tagName.toLowerCase());
+      } else {
+        setHoveredElement(null);
+      }
     };
-    
-    document.body.addEventListener("mouseenter", handleMouseEnter);
-    document.body.addEventListener("mouseleave", handleMouseLeave);
-    
-    const cleanup = trackCursorType();
-    
+
+    document.addEventListener('mouseover', handleMouseOver);
     return () => {
-      document.body.removeEventListener("mouseenter", handleMouseEnter);
-      document.body.removeEventListener("mouseleave", handleMouseLeave);
-      cleanup();
+      document.removeEventListener('mouseover', handleMouseOver);
     };
   }, []);
-  
-  if (!isVisible) return null;
-  
+
+  // Determine cursor style based on theme and element being hovered
+  const getCursorStyle = () => {
+    if (styleTheme === 'cyber') {
+      return hoveredElement 
+        ? 'mix-blend-difference bg-white border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,255,255,0.5)]' 
+        : 'border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,255,255,0.3)]';
+    } else {
+      return hoveredElement 
+        ? 'mix-blend-difference bg-white border border-white/50' 
+        : 'border border-primary/50 backdrop-blur-sm';
+    }
+  };
+
   return (
     <>
-      {/* Base cursor */}
-      <div 
-        className={`fixed pointer-events-none z-50 transition-all duration-100 ${isMoving ? 'scale-90' : 'scale-100'}`}
+      {/* Main cursor */}
+      <div
+        className={`fixed pointer-events-none z-[9999] rounded-full transition-transform duration-100 ${
+          isMoving ? 'scale-100' : 'scale-90'
+        } ${
+          hoveredElement ? 'w-8 h-8' : 'w-5 h-5'
+        } ${getCursorStyle()}`}
         style={{
-          left: `${x}px`,
-          top: `${y}px`,
-          transform: 'translate(-50%, -50%)'
+          transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`
         }}
       >
-        <div 
-          className={`rounded-full mix-blend-difference transition-all duration-200 ${
-            cursorType === "default" ? "w-6 h-6 bg-white" :
-            cursorType === "design" ? "w-12 h-12 border-2 border-white bg-transparent" :
-            "w-16 h-16 border border-white bg-transparent"
-          }`}
-        />
+        {styleTheme === 'cyber' && (
+          <div className="absolute inset-0 rounded-full opacity-50 animate-pulse-slow" 
+            style={{background: 'radial-gradient(circle, rgba(0,255,255,0.3) 0%, rgba(0,0,0,0) 70%)'}}
+          />
+        )}
       </div>
       
-      {/* Text cursor */}
-      {cursorType === "text" && (
-        <div 
-          className="fixed pointer-events-none z-50 text-white mix-blend-difference font-light"
-          style={{
-            left: `${x + 20}px`,
-            top: `${y}px`,
-            transform: 'translateY(-50%)'
-          }}
-        >
-          Text
-        </div>
-      )}
-      
-      {/* Design cursor */}
-      {cursorType === "design" && (
-        <div 
-          className="fixed pointer-events-none z-50 text-white mix-blend-difference font-light"
-          style={{
-            left: `${x + 20}px`,
-            top: `${y}px`,
-            transform: 'translateY(-50%)'
-          }}
-        >
-          View
-        </div>
-      )}
+      {/* Secondary cursor/trail effect */}
+      <div
+        className={`fixed pointer-events-none z-[9998] rounded-full opacity-30 w-12 h-12 transition-all duration-300 ${
+          styleTheme === 'cyber' 
+            ? 'border border-cyan-500' 
+            : 'border border-primary/20 backdrop-blur-sm'
+        }`}
+        style={{
+          transform: `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${isMoving ? 1.2 : 0.8})`,
+          transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        }}
+      />
     </>
   );
 }
