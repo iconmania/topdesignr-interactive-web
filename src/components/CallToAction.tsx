@@ -47,8 +47,8 @@ export default function CallToAction() {
       <div 
         className="absolute inset-0 w-[110%] h-[110%] bg-cover bg-center"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')",
-          transform: `translate(${normalizedX * -30}px, ${normalizedY * -30}px) translateY(${scrollY * -0.05}px)`,
+          backgroundImage: "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')",
+          transform: `translate(${normalizedX * -15}px, ${normalizedY * -15}px) scale(1.1) translateY(${-scrollY * 0.05}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       ></div>
@@ -56,16 +56,13 @@ export default function CallToAction() {
       {/* Parallax Background Overlay */}
       <div 
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        style={{
-          transform: `translateY(${scrollY * 0.1}px)`,
-        }}
       ></div>
       
       {/* Interactive Parallax Elements */}
       <div 
         className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/10 mix-blend-overlay blur-3xl"
         style={{
-          transform: `translate(${normalizedX * -50}px, ${normalizedY * -50}px) translateY(${scrollY * -0.2}px)`,
+          transform: `translate(${normalizedX * -50}px, ${normalizedY * -50}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       ></div>
@@ -73,7 +70,7 @@ export default function CallToAction() {
       <div 
         className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-primary/20 mix-blend-overlay blur-3xl"
         style={{
-          transform: `translate(${normalizedX * 60}px, ${normalizedY * 60}px) translateY(${scrollY * -0.3}px)`,
+          transform: `translate(${normalizedX * 60}px, ${normalizedY * 60}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       ></div>
@@ -82,7 +79,7 @@ export default function CallToAction() {
       <div 
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10"
         style={{
-          transform: `translate(${normalizedX * 30}px, ${normalizedY * 30}px) translateY(${scrollY * -0.1}px)`,
+          transform: `translate(${normalizedX * 30}px, ${normalizedY * 30}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       >
@@ -97,18 +94,12 @@ export default function CallToAction() {
         >
           <h2 
             className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 text-white tracking-tighter"
-            style={{
-              transform: `translateY(${scrollY * -0.1}px)`,
-            }}
           >
             Ready to transform your <span className="text-gradient">digital presence</span>?
           </h2>
           
           <p 
             className="text-xl text-white/70 max-w-3xl mx-auto mb-12 font-light"
-            style={{
-              transform: `translateY(${scrollY * -0.05}px)`,
-            }}
           >
             Let's collaborate to create meaningful experiences that elevate your brand,
             engage your audience, and drive measurable results.
@@ -116,13 +107,11 @@ export default function CallToAction() {
           
           <div 
             className="flex flex-col sm:flex-row justify-center gap-6"
-            style={{
-              transform: `translateY(${scrollY * -0.02}px)`,
-            }}
           >
             <MagneticButton 
               size="lg" 
               className="group relative overflow-hidden bg-white text-black hover:bg-white/90 px-8 py-7 text-lg"
+              strength={15}
             >
               <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2 flex items-center">
                 START A PROJECT
@@ -135,6 +124,7 @@ export default function CallToAction() {
               variant="outline" 
               size="lg"
               className="relative overflow-hidden border-white text-white hover:bg-white/10 px-8 py-7 text-lg"
+              strength={15}
             >
               <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2">VIEW OUR PROCESS</span>
               <span className="absolute inset-0 bg-white/10 z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>

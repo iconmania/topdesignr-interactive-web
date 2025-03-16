@@ -1,10 +1,9 @@
 
 import { useRef, useState, useEffect } from "react";
-import { ArrowRight, ArrowLeft, Palette, LineChart, LayoutGrid, Globe, Layers, MousePointer } from "lucide-react";
+import { ArrowRight, ArrowLeft, Palette, LineChart, LayoutGrid, Globe, Layers } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Service = {
   id: number;
@@ -54,6 +53,9 @@ export default function Services() {
   const { normalizedX, normalizedY } = useMousePosition();
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -107,6 +109,48 @@ export default function Services() {
     setScrollPosition(e.currentTarget.scrollLeft);
   };
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+    scrollRef.current.style.cursor = 'grabbing';
+    scrollRef.current.style.userSelect = 'none';
+  };
+
+  const handleMouseUp = () => {
+    if (!scrollRef.current) return;
+    
+    setIsDragging(false);
+    scrollRef.current.style.cursor = 'grab';
+    scrollRef.current.style.removeProperty('user-select');
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return;
+    
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Scroll speed multiplier
+    const newScrollLeft = scrollLeft - walk;
+    
+    scrollRef.current.scrollLeft = newScrollLeft;
+    setScrollPosition(newScrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      handleMouseUp();
+    }
+  };
+
+  useEffect(() => {
+    // Clean up events if component unmounts while dragging
+    return () => {
+      handleMouseUp();
+    };
+  }, []);
+
   return (
     <section id="services" ref={sectionRef} className="py-24 relative overflow-hidden" data-cursor="design">
       {/* Background Typography */}
@@ -155,11 +199,15 @@ export default function Services() {
             </MagneticButton>
           </div>
           
-          {/* Horizontal Scrolling Area */}
+          {/* Horizontal Scrolling Area with Drag Feature */}
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto scrollbar-none pb-8 gap-6 md:gap-8 snap-x snap-mandatory"
+            className="flex overflow-x-auto scrollbar-none pb-8 gap-6 md:gap-8 snap-x snap-mandatory cursor-grab"
             onScroll={handleScrollEvent}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           >
             {services.map(service => (
               <Card 

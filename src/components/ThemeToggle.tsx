@@ -17,6 +17,7 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       className="w-10 h-10 rounded-full transition-transform duration-300 hover:scale-110"
       aria-label="Toggle theme"
+      strength={15}
     >
       {theme === "light" ? (
         <Sun className="h-5 w-5 transition-all duration-300" />

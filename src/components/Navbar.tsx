@@ -1,9 +1,8 @@
 
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
-import StyleThemeToggle from "./StyleThemeToggle";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -61,14 +60,12 @@ export default function Navbar() {
             Contact
           </a>
           <ThemeToggle />
-          <StyleThemeToggle />
-          <Button className="button-animation">Get Started</Button>
+          <MagneticButton className="button-animation">Get Started</MagneticButton>
         </nav>
         
         <div className="flex items-center md:hidden space-x-4">
           <ThemeToggle />
-          <StyleThemeToggle />
-          <Button 
+          <MagneticButton 
             variant="ghost" 
             size="icon" 
             onClick={toggleMenu}
@@ -76,7 +73,7 @@ export default function Navbar() {
             className="transition-colors"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+          </MagneticButton>
         </div>
       </div>
       
@@ -129,7 +126,7 @@ export default function Navbar() {
           >
             Contact
           </a>
-          <Button className="w-full button-animation">Get Started</Button>
+          <MagneticButton className="w-full button-animation">Get Started</MagneticButton>
         </div>
       </div>
     </header>

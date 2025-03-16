@@ -1,8 +1,8 @@
 
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { ChevronDown, ArrowRight } from "lucide-react";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export default function Hero() {
   const { normalizedX, normalizedY } = useMousePosition();
@@ -67,7 +67,7 @@ export default function Hero() {
                 className="inline-block"
                 style={{ 
                   transform: `translate(${normalizedX * 10}px, ${normalizedY * 10}px)`,
-                  transition: "transform 0.3s ease-out"
+                  transition: "transform 0.1s ease-out"
                 }}
               >WE CREATE</span> 
             </h1>
@@ -78,14 +78,14 @@ export default function Hero() {
               className="text-5xl md:text-7xl lg:text-8xl font-black mb-2 tracking-tighter leading-none"
               style={{ 
                 transform: `translateY(${scrollPosition * 0.1}px)`,
-                transition: "transform 0.3s ease-out"
+                transition: "transform 0.1s ease-out"
               }}
             >
               <span 
                 className="inline-block text-gradient"
                 style={{ 
                   transform: `translate(${normalizedX * 10}px, ${normalizedY * 10}px)`,
-                  transition: "transform 0.4s ease-out"
+                  transition: "transform 0.1s ease-out"
                 }}
               >DIGITAL EXPERIENCES</span> 
             </h1>
@@ -95,7 +95,7 @@ export default function Hero() {
             className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-16 leading-relaxed font-light"
             style={{ 
               transform: `translate(${normalizedX * -5}px, ${normalizedY * -5}px)`,
-              transition: "transform 0.2s ease-out"
+              transition: "transform 0.1s ease-out"
             }}
           >
             Elevating brands through strategic design, cutting-edge technology,
@@ -103,26 +103,28 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-            <Button 
+            <MagneticButton 
               size="lg" 
               className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-300 overflow-hidden hover:shadow-lg"
+              strength={15}
             >
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-2">
                 VIEW OUR WORK
               </span>
               <span className="absolute inset-0 bg-primary z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300"></span>
-            </Button>
-            <Button 
+            </MagneticButton>
+            <MagneticButton 
               variant="outline" 
               size="lg"
               className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-300 overflow-hidden hover:shadow-md"
+              strength={15}
             >
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-2 flex items-center">
                 CONTACT US 
                 <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-[-10px] group-hover:translate-x-0" />
               </span>
               <span className="absolute inset-0 bg-primary/10 z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300"></span>
-            </Button>
+            </MagneticButton>
           </div>
         </div>
       </div>
@@ -132,7 +134,7 @@ export default function Hero() {
         className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce z-10"
         style={{ 
           transform: `translate(-50%, ${normalizedY * 20}px)`,
-          transition: "transform 0.2s ease-out"
+          transition: "transform 0.1s ease-out"
         }}
       >
         <a href="#stats" aria-label="Scroll to stats" className="flex flex-col items-center">
