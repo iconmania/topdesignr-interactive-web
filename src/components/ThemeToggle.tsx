@@ -15,15 +15,16 @@ export default function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="animated-button w-10 h-10 rounded-full relative overflow-hidden"
+      className="w-10 h-10 relative overflow-hidden"
       aria-label="Toggle theme"
       strength={20}
+      rounded={true}
     >
       <div className="absolute inset-0 bg-primary/10 rounded-full scale-0 transition-transform duration-500 group-hover:scale-100"></div>
       {theme === "light" ? (
-        <Sun className="h-5 w-5 transition-all duration-300 ease-out hover:rotate-45" />
+        <Sun className="h-5 w-5 transition-all duration-300 ease-out group-hover:rotate-45" />
       ) : (
-        <Moon className="h-5 w-5 transition-all duration-300 ease-out hover:-rotate-45" />
+        <Moon className="h-5 w-5 transition-all duration-300 ease-out group-hover:-rotate-45" />
       )}
       <span className="sr-only">Toggle theme</span>
     </MagneticButton>

@@ -7,10 +7,11 @@ interface MagneticButtonProps extends ButtonProps {
   strength?: number;
   className?: string;
   children: React.ReactNode;
+  rounded?: boolean;
 }
 
 const MagneticButton = React.forwardRef<HTMLButtonElement, MagneticButtonProps>(
-  ({ strength = 25, className, children, ...props }, ref) => {
+  ({ strength = 25, className, children, rounded = false, ...props }, ref) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
@@ -59,7 +60,8 @@ const MagneticButton = React.forwardRef<HTMLButtonElement, MagneticButtonProps>(
           buttonRef.current = node;
         }}
         className={cn(
-          "group transition-all overflow-hidden duration-300 ease-out hover:scale-[1.03] active:scale-[0.97]",
+          "group relative transition-all overflow-hidden duration-300 ease-out hover:scale-[1.03] active:scale-[0.97]",
+          rounded ? "rounded-full" : "rounded-xl",
           className
         )}
         onMouseMove={handleMouseMove}
@@ -68,7 +70,8 @@ const MagneticButton = React.forwardRef<HTMLButtonElement, MagneticButtonProps>(
         style={magneticStyle}
         {...props}
       >
-        {children}
+        <span className="relative z-10">{children}</span>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-tr from-primary/80 to-primary/30 transition-opacity duration-300"></div>
       </Button>
     );
   }

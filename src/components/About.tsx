@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { useMousePosition } from "@/hooks/useMousePosition";
+import { MagneticButton } from "@/components/ui/magnetic-button";
+
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -11,6 +12,7 @@ export default function About() {
     normalizedX,
     normalizedY
   } = useMousePosition();
+  
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -32,6 +34,7 @@ export default function About() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return <section id="about" ref={sectionRef} className="py-32 px-6 md:px-12 bg-secondary/30 relative overflow-hidden" data-cursor="text">
       {/* Interactive mouse glow effect */}
       <div className="absolute pointer-events-none rounded-full bg-primary/5 mix-blend-overlay blur-3xl" style={{
@@ -98,17 +101,21 @@ export default function About() {
             }}></div>
             </div>
             
-            <Button className="group overflow-hidden relative px-8 py-6 text-lg font-medium tracking-wider mt-6" style={{
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            opacity: isVisible ? 1 : 0,
-            transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
-            transitionDelay: '0.9s'
-          }}>
+            <MagneticButton 
+              className="group overflow-hidden relative px-8 py-6 text-lg font-medium tracking-wider mt-6" 
+              strength={30}
+              style={{
+                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                opacity: isVisible ? 1 : 0,
+                transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
+                transitionDelay: '0.9s'
+              }}
+            >
               <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-500">
                 LEARN MORE
               </span>
               <span className="absolute inset-0 bg-primary z-0 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></span>
-            </Button>
+            </MagneticButton>
           </div>
           
           <div className={`relative transition-all duration-700 delay-300 h-full ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-20"}`}>

@@ -136,7 +136,7 @@ export default function Services() {
     if (!isDragging || !scrollRef.current) return;
     
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Adjusted scroll speed multiplier
+    const walk = (x - startX) * 2.5; // Adjusted scroll speed multiplier for smoother drag
     
     // Apply scrolling directly without animation for smoother dragging
     scrollRef.current.scrollLeft = scrollLeft - walk;
@@ -165,7 +165,7 @@ export default function Services() {
     if (!isDragging || !scrollRef.current) return;
     
     const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
+    const walk = (x - startX) * 2.5;
     
     scrollRef.current.scrollLeft = scrollLeft - walk;
     setScrollPosition(scrollRef.current.scrollLeft);
@@ -210,9 +210,10 @@ export default function Services() {
               variant="outline" 
               size="icon" 
               onClick={() => handleScroll('left')}
-              className="animated-button rounded-full" 
+              className="animated-button" 
               disabled={scrollPosition <= 0}
               strength={25}
+              rounded={true}
             >
               <ArrowLeft className="h-4 w-4" />
             </MagneticButton>
@@ -220,18 +221,25 @@ export default function Services() {
               variant="outline" 
               size="icon" 
               onClick={() => handleScroll('right')}
-              className="animated-button rounded-full"
+              className="animated-button"
               disabled={scrollPosition >= maxScroll}
               strength={25}
+              rounded={true}
             >
               <ArrowRight className="h-4 w-4" />
             </MagneticButton>
           </div>
           
+          {/* Left-side gradient fade effect */}
+          <div className="absolute left-0 top-8 bottom-20 w-12 z-10 bg-gradient-to-r from-background to-transparent pointer-events-none"></div>
+          
+          {/* Right-side gradient fade effect */}
+          <div className="absolute right-0 top-8 bottom-20 w-12 z-10 bg-gradient-to-l from-background to-transparent pointer-events-none"></div>
+          
           {/* Horizontal Scrolling Area with Improved Drag Feature */}
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto scrollbar-none pb-20 pt-8 gap-6 md:gap-8 cursor-grab"
+            className="flex overflow-x-auto scrollbar-none pb-20 pt-8 gap-6 md:gap-8 px-12 ml-[-48px] mr-[-48px] w-[calc(100%+96px)] cursor-grab"
             onScroll={handleScrollEvent}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
@@ -251,7 +259,7 @@ export default function Services() {
                 key={service.id} 
                 className={`flex-shrink-0 w-[85%] md:w-[400px] h-[380px] rounded-xl p-1 relative transition-all duration-500 
                   ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"} 
-                  ${hoverService === service.id ? 'scale-[1.03] z-10' : 'scale-100 z-0'}
+                  ${hoverService === service.id ? 'scale-[1.05] z-20' : 'scale-100 z-0'}
                   hover:shadow-xl`}
                 onMouseEnter={() => setHoverService(service.id)} 
                 onMouseLeave={() => setHoverService(null)}
@@ -261,12 +269,12 @@ export default function Services() {
                     perspective(1200px) 
                     rotateX(${normalizedY * 12}deg) 
                     rotateY(${normalizedX * 12}deg)
-                    translateZ(${hoverService === service.id ? 30 : 0}px)
-                    scale(${hoverService === service.id ? 1.03 : 1})
+                    translateZ(${hoverService === service.id ? 40 : 0}px)
+                    scale(${hoverService === service.id ? 1.05 : 1})
                   `,
                   transformStyle: 'preserve-3d',
                   boxShadow: hoverService === service.id 
-                    ? '0 20px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(var(--primary), 0.2)' 
+                    ? '0 20px 40px rgba(0, 0, 0, 0.2), 0 0 25px rgba(var(--primary), 0.3)' 
                     : '0 5px 20px rgba(0, 0, 0, 0.1)',
                   background: `linear-gradient(to bottom right, 
                     hsl(var(--card-hsl, var(--card)) / 1) 10%, 
@@ -280,7 +288,7 @@ export default function Services() {
                     <div 
                       className="mb-6 w-16 h-16 flex items-center justify-center text-primary rounded-full bg-primary/10"
                       style={{
-                        transform: hoverService === service.id ? 'translateZ(20px)' : 'translateZ(0)',
+                        transform: hoverService === service.id ? 'translateZ(30px)' : 'translateZ(0)',
                         transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
                       }}
                     >
@@ -290,7 +298,7 @@ export default function Services() {
                     <h3 
                       className="text-2xl md:text-3xl font-bold mb-4"
                       style={{
-                        transform: hoverService === service.id ? 'translateZ(15px)' : 'translateZ(0)',
+                        transform: hoverService === service.id ? 'translateZ(25px)' : 'translateZ(0)',
                         transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
                       }}
                     >
@@ -300,7 +308,7 @@ export default function Services() {
                     <p 
                       className="text-muted-foreground mb-8"
                       style={{
-                        transform: hoverService === service.id ? 'translateZ(10px)' : 'translateZ(0)',
+                        transform: hoverService === service.id ? 'translateZ(20px)' : 'translateZ(0)',
                         transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
                       }}
                     >

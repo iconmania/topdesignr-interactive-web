@@ -104,7 +104,7 @@
 
   .animated-button::before {
     content: '';
-    @apply absolute inset-0 bg-primary/10 scale-0 rounded-md transition-transform duration-500 origin-center;
+    @apply absolute inset-0 bg-primary/10 scale-0 transition-transform duration-500 origin-center;
   }
 
   .animated-button:hover::before {
@@ -119,16 +119,16 @@
     @apply shadow-lg shadow-green-500/30;
   }
 
-  /* Button hover effect for theme */
+  /* Updated button hover effects */
   .light button:hover:not([disabled]) {
-    @apply bg-blue-600/90 text-blue-50;
+    @apply bg-blue-600/90 text-blue-50 shadow-md shadow-blue-500/20;
   }
 
   .dark button:hover:not([disabled]) {
-    @apply bg-green-600/90 text-green-50;
+    @apply bg-green-600/90 text-green-50 shadow-md shadow-green-500/20;
   }
 
-  /* Additional button states */
+  /* Enhanced button states */
   button:active:not([disabled]) {
     @apply transform scale-95 transition-transform;
   }
@@ -137,6 +137,31 @@
     @apply outline-none ring-2 ring-primary ring-offset-2;
   }
 
+  /* Button glow effect */
+  .btn-glow {
+    @apply relative overflow-hidden;
+  }
+  
+  .btn-glow::after {
+    content: '';
+    @apply absolute inset-0 rounded-xl bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 opacity-0 transition-opacity duration-1000;
+  }
+  
+  .btn-glow:hover::after {
+    @apply opacity-100;
+    animation: btn-glow-sweep 2s ease-in-out infinite;
+  }
+  
+  @keyframes btn-glow-sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Existing animations */
   @keyframes pulse-slow {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
@@ -177,7 +202,7 @@
     backface-visibility: hidden;
   }
   
-  /* Add scrollbar-none utility */
+  /* Scrollbar utilities */
   .scrollbar-none {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
