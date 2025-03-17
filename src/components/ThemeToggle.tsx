@@ -15,7 +15,7 @@ export default function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="w-10 h-10 rounded-full transition-transform duration-300 hover:scale-110"
+      className="w-10 h-10 rounded-full transition-all duration-300 hover:scale-110"
       aria-label="Toggle theme"
       strength={15}
     >

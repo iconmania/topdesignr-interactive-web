@@ -89,6 +89,7 @@ export default function Services() {
     return () => window.removeEventListener('resize', updateMaxScroll);
   }, []);
 
+  // Improved smooth scroll function
   const handleScroll = (direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
     
@@ -109,6 +110,7 @@ export default function Services() {
     setScrollPosition(e.currentTarget.scrollLeft);
   };
 
+  // Improved mouse drag handling for smoother scrolling
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
     
@@ -117,6 +119,9 @@ export default function Services() {
     setScrollLeft(scrollRef.current.scrollLeft);
     scrollRef.current.style.cursor = 'grabbing';
     scrollRef.current.style.userSelect = 'none';
+    
+    // Prevent default behavior to avoid text selection during drag
+    e.preventDefault();
   };
 
   const handleMouseUp = () => {
@@ -131,17 +136,46 @@ export default function Services() {
     if (!isDragging || !scrollRef.current) return;
     
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll speed multiplier
-    const newScrollLeft = scrollLeft - walk;
+    const walk = (x - startX) * 1.5; // Adjusted scroll speed multiplier for smoother drag
     
-    scrollRef.current.scrollLeft = newScrollLeft;
-    setScrollPosition(newScrollLeft);
+    // Apply scrolling directly without animation for smoother dragging
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+    setScrollPosition(scrollRef.current.scrollLeft);
+    
+    // Prevent default to avoid text selection
+    e.preventDefault();
   };
 
   const handleMouseLeave = () => {
     if (isDragging) {
       handleMouseUp();
     }
+  };
+
+  // Handle touch events for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!scrollRef.current) return;
+    
+    setIsDragging(true);
+    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !scrollRef.current) return;
+    
+    const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+    setScrollPosition(scrollRef.current.scrollLeft);
+    
+    // Prevent page scrolling while dragging
+    e.preventDefault();
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
   };
 
   useEffect(() => {
@@ -199,20 +233,24 @@ export default function Services() {
             </MagneticButton>
           </div>
           
-          {/* Horizontal Scrolling Area with Drag Feature */}
+          {/* Horizontal Scrolling Area with Improved Drag Feature */}
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto scrollbar-none pb-8 gap-6 md:gap-8 snap-x snap-mandatory cursor-grab"
+            className="flex overflow-x-auto scrollbar-none pb-8 gap-6 md:gap-8 cursor-grab"
             onScroll={handleScrollEvent}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ scrollBehavior: isDragging ? 'auto' : 'smooth', scrollSnapType: 'none' }}
           >
             {services.map(service => (
               <Card 
                 key={service.id} 
-                className={`flex-shrink-0 w-[85%] md:w-[400px] snap-start rounded-xl p-1 relative transition-all duration-500 
+                className={`flex-shrink-0 w-[85%] md:w-[400px] rounded-xl p-1 relative transition-all duration-500 
                   ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"} 
                   ${hoverService === service.id ? 'scale-[1.02]' : 'scale-100'}`}
                 onMouseEnter={() => setHoverService(service.id)} 

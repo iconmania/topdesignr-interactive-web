@@ -41,14 +41,14 @@ export default function CallToAction() {
     <section 
       ref={sectionRef} 
       data-cursor="text"
-      className="py-32 relative overflow-hidden w-screen h-screen flex items-center justify-center"
+      className="py-32 relative overflow-hidden h-screen flex items-center justify-center"
     >
-      {/* Background Parallax Image */}
+      {/* Background Parallax Image - Fixed size to prevent background issues */}
       <div 
-        className="absolute inset-0 w-[110%] h-[110%] bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')",
-          transform: `translate(${normalizedX * -15}px, ${normalizedY * -15}px) scale(1.1) translateY(${-scrollY * 0.05}px)`,
+          transform: `translate(${normalizedX * -15}px, ${normalizedY * -15}px) translateY(${-scrollY * 0.05}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       ></div>
