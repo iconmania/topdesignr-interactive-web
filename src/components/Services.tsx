@@ -136,7 +136,7 @@ export default function Services() {
     if (!isDragging || !scrollRef.current) return;
     
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Adjusted scroll speed multiplier for smoother drag
+    const walk = (x - startX) * 2; // Adjusted scroll speed multiplier
     
     // Apply scrolling directly without animation for smoother dragging
     scrollRef.current.scrollLeft = scrollLeft - walk;
@@ -165,7 +165,7 @@ export default function Services() {
     if (!isDragging || !scrollRef.current) return;
     
     const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
+    const walk = (x - startX) * 2;
     
     scrollRef.current.scrollLeft = scrollLeft - walk;
     setScrollPosition(scrollRef.current.scrollLeft);
@@ -187,13 +187,6 @@ export default function Services() {
 
   return (
     <section id="services" ref={sectionRef} className="py-24 relative overflow-hidden" data-cursor="design">
-      {/* Background Typography */}
-      <div className="absolute -left-20 top-0 opacity-5 pointer-events-none overflow-hidden">
-        <h1 className="text-[30vw] font-black tracking-tighter">
-          WORK
-        </h1>
-      </div>
-      
       <div className="relative z-10">
         <div className="container px-4 md:px-12 mb-16">
           <div className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -217,8 +210,9 @@ export default function Services() {
               variant="outline" 
               size="icon" 
               onClick={() => handleScroll('left')}
-              className="rounded-full" 
+              className="animated-button rounded-full" 
               disabled={scrollPosition <= 0}
+              strength={25}
             >
               <ArrowLeft className="h-4 w-4" />
             </MagneticButton>
@@ -226,8 +220,9 @@ export default function Services() {
               variant="outline" 
               size="icon" 
               onClick={() => handleScroll('right')}
-              className="rounded-full"
+              className="animated-button rounded-full"
               disabled={scrollPosition >= maxScroll}
+              strength={25}
             >
               <ArrowRight className="h-4 w-4" />
             </MagneticButton>
@@ -236,7 +231,7 @@ export default function Services() {
           {/* Horizontal Scrolling Area with Improved Drag Feature */}
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto scrollbar-none pb-8 gap-6 md:gap-8 cursor-grab"
+            className="flex overflow-x-auto scrollbar-none pb-20 pt-8 gap-6 md:gap-8 cursor-grab"
             onScroll={handleScrollEvent}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
@@ -245,37 +240,79 @@ export default function Services() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            style={{ scrollBehavior: isDragging ? 'auto' : 'smooth', scrollSnapType: 'none' }}
+            style={{ 
+              scrollBehavior: 'auto', 
+              scrollSnapType: 'none',
+              perspective: '1000px'
+            }}
           >
             {services.map(service => (
               <Card 
                 key={service.id} 
-                className={`flex-shrink-0 w-[85%] md:w-[400px] rounded-xl p-1 relative transition-all duration-500 
+                className={`flex-shrink-0 w-[85%] md:w-[400px] h-[380px] rounded-xl p-1 relative transition-all duration-500 
                   ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"} 
-                  ${hoverService === service.id ? 'scale-[1.02]' : 'scale-100'}`}
+                  ${hoverService === service.id ? 'scale-[1.03] z-10' : 'scale-100 z-0'}
+                  hover:shadow-xl`}
                 onMouseEnter={() => setHoverService(service.id)} 
                 onMouseLeave={() => setHoverService(null)}
                 style={{
                   transitionDelay: `${service.id * 100}ms`,
-                  transform: `perspective(1000px) rotateX(${normalizedY * 5}deg) rotateY(${normalizedX * 5}deg) scale(${hoverService === service.id ? 1.02 : 1})`,
-                  boxShadow: hoverService === service.id ? '0 10px 40px rgba(0, 0, 0, 0.1)' : 'none',
-                  background: `linear-gradient(to bottom right, var(--card) 0%, var(--background) 100%)`,
+                  transform: `
+                    perspective(1200px) 
+                    rotateX(${normalizedY * 12}deg) 
+                    rotateY(${normalizedX * 12}deg)
+                    translateZ(${hoverService === service.id ? 30 : 0}px)
+                    scale(${hoverService === service.id ? 1.03 : 1})
+                  `,
+                  transformStyle: 'preserve-3d',
+                  boxShadow: hoverService === service.id 
+                    ? '0 20px 40px rgba(0, 0, 0, 0.2), 0 0 20px rgba(var(--primary), 0.2)' 
+                    : '0 5px 20px rgba(0, 0, 0, 0.1)',
+                  background: `linear-gradient(to bottom right, 
+                    hsl(var(--card-hsl, var(--card)) / 1) 10%, 
+                    hsl(var(--background-hsl, var(--background)) / 1) 100%)
+                  `,
+                  transition: 'all 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
                 }}
               >
-                <CardContent className="p-8 md:p-10">
-                  <div className="mb-6 w-16 h-16 flex items-center justify-center text-primary rounded-full bg-primary/10">
-                    {service.icon}
+                <CardContent className="p-8 md:p-10 h-full flex flex-col justify-between">
+                  <div>
+                    <div 
+                      className="mb-6 w-16 h-16 flex items-center justify-center text-primary rounded-full bg-primary/10"
+                      style={{
+                        transform: hoverService === service.id ? 'translateZ(20px)' : 'translateZ(0)',
+                        transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
+                      }}
+                    >
+                      {service.icon}
+                    </div>
+                    
+                    <h3 
+                      className="text-2xl md:text-3xl font-bold mb-4"
+                      style={{
+                        transform: hoverService === service.id ? 'translateZ(15px)' : 'translateZ(0)',
+                        transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
+                      }}
+                    >
+                      {service.title}
+                    </h3>
+                    
+                    <p 
+                      className="text-muted-foreground mb-8"
+                      style={{
+                        transform: hoverService === service.id ? 'translateZ(10px)' : 'translateZ(0)',
+                        transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
+                      }}
+                    >
+                      {service.description}
+                    </p>
                   </div>
                   
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                    {service.title}
-                  </h3>
-                  
-                  <p className="text-muted-foreground mb-8">
-                    {service.description}
-                  </p>
-                  
-                  <MagneticButton variant="link" className="inline-flex items-center text-primary font-medium group p-0">
+                  <MagneticButton 
+                    variant="link" 
+                    className="inline-flex items-center text-primary font-medium group p-0"
+                    strength={20}
+                  >
                     <span className="mr-2 group-hover:mr-4 transition-all duration-300">Learn more</span>
                     <ArrowRight className="h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
                   </MagneticButton>

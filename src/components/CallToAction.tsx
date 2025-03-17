@@ -7,7 +7,7 @@ import { useMousePosition } from "@/hooks/useMousePosition";
 export default function CallToAction() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [sectionScrollProgress, setSectionScrollProgress] = useState(0);
   const { normalizedX, normalizedY } = useMousePosition();
   
   useEffect(() => {
@@ -15,7 +15,6 @@ export default function CallToAction() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect();
         }
       },
       { threshold: 0.1 }
@@ -26,7 +25,14 @@ export default function CallToAction() {
     }
     
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      if (!sectionRef.current) return;
+      
+      const rect = sectionRef.current.getBoundingClientRect();
+      const scrollPercentage = Math.max(0, Math.min(1, 
+        1 - (rect.top / window.innerHeight)
+      ));
+      
+      setSectionScrollProgress(scrollPercentage);
     };
     
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -43,13 +49,15 @@ export default function CallToAction() {
       data-cursor="text"
       className="py-32 relative overflow-hidden h-screen flex items-center justify-center"
     >
-      {/* Background Parallax Image - Fixed size to prevent background issues */}
+      {/* Background Parallax Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')",
-          transform: `translate(${normalizedX * -15}px, ${normalizedY * -15}px) translateY(${-scrollY * 0.05}px)`,
+          transform: `translate(${normalizedX * -15}px, ${normalizedY * -15}px) translateY(${-sectionScrollProgress * 100}px)`,
           transition: 'transform 0.3s ease-out',
+          height: "120%", // Make image taller to prevent white space
+          top: "-10%", // Position it higher
         }}
       ></div>
       
@@ -110,24 +118,22 @@ export default function CallToAction() {
           >
             <MagneticButton 
               size="lg" 
-              className="group relative overflow-hidden bg-white text-black hover:bg-white/90 px-8 py-7 text-lg"
+              className="animated-button bg-white text-black hover:bg-white/90 px-8 py-7 text-lg"
               strength={15}
             >
-              <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2 flex items-center">
+              <span className="relative z-10 flex items-center">
                 START A PROJECT
-                <ArrowRight className="ml-2 h-5 w-5 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0" />
+                <ArrowRight className="ml-2 h-5 w-5 transition-all duration-300 transform translate-x-[-5px] opacity-0 group-hover:translate-x-0 group-hover:opacity-100" />
               </span>
-              <span className="absolute inset-0 bg-white z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
             </MagneticButton>
             
             <MagneticButton 
               variant="outline" 
               size="lg"
-              className="relative overflow-hidden border-white text-white hover:bg-white/10 px-8 py-7 text-lg"
+              className="animated-button border-white text-white hover:bg-white/10 px-8 py-7 text-lg"
               strength={15}
             >
-              <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2">VIEW OUR PROCESS</span>
-              <span className="absolute inset-0 bg-white/10 z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
+              <span className="relative z-10">VIEW OUR PROCESS</span>
             </MagneticButton>
           </div>
         </div>

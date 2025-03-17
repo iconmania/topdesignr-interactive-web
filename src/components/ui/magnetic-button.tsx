@@ -40,7 +40,7 @@ const MagneticButton = React.forwardRef<HTMLButtonElement, MagneticButtonProps>(
     const magneticStyle = isHovered
       ? {
           transform: `translate(${position.x / (strength / 10)}px, ${position.y / (strength / 10)}px)`,
-          transition: 'transform 0.1s cubic-bezier(0.33, 1, 0.68, 1)',
+          transition: 'transform 0.15s cubic-bezier(0.33, 1, 0.68, 1)',
         }
       : {
           transform: 'translate(0, 0)',
@@ -59,7 +59,7 @@ const MagneticButton = React.forwardRef<HTMLButtonElement, MagneticButtonProps>(
           buttonRef.current = node;
         }}
         className={cn(
-          "transition-all duration-100 ease-out hover:scale-[1.02]",
+          "group transition-all overflow-hidden duration-300 ease-out hover:scale-[1.03] active:scale-[0.97]",
           className
         )}
         onMouseMove={handleMouseMove}

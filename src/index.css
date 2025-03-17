@@ -97,6 +97,46 @@
     @apply shadow-md shadow-green-500/20;
   }
 
+  /* Enhanced button animations */
+  .animated-button {
+    @apply relative overflow-hidden;
+  }
+
+  .animated-button::before {
+    content: '';
+    @apply absolute inset-0 bg-primary/10 scale-0 rounded-md transition-transform duration-500 origin-center;
+  }
+
+  .animated-button:hover::before {
+    @apply scale-100;
+  }
+
+  .light .animated-button:hover {
+    @apply shadow-lg shadow-blue-500/30;
+  }
+
+  .dark .animated-button:hover {
+    @apply shadow-lg shadow-green-500/30;
+  }
+
+  /* Button hover effect for theme */
+  .light button:hover:not([disabled]) {
+    @apply bg-blue-600/90 text-blue-50;
+  }
+
+  .dark button:hover:not([disabled]) {
+    @apply bg-green-600/90 text-green-50;
+  }
+
+  /* Additional button states */
+  button:active:not([disabled]) {
+    @apply transform scale-95 transition-transform;
+  }
+
+  button:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+
   @keyframes pulse-slow {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
@@ -122,6 +162,19 @@
   
   .animate-cursor-blink {
     animation: cursor-blink 1s infinite step-end;
+  }
+
+  /* 3D perspective helpers */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
   }
   
   /* Add scrollbar-none utility */
