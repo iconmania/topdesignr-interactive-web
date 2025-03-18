@@ -170,7 +170,7 @@ export default function Testimonials() {
                   </div>
                   
                   <div className="flex space-x-4">
-                    <Button variant="outline" size="icon" onClick={handlePrev} className="w-14 h-14 rounded-full border-2 hover:border-primary group" aria-label="Previous testimonial">
+                    <Button variant="outline" size="icon" onClick={handlePrev} aria-label="Previous testimonial" className="w-14 h-14 rounded-full border-2 hover:border-primary group animated-button">
                       <ArrowLeft className="h-5 w-5 group-hover:scale-125 transition-transform duration-300" />
                     </Button>
                     <Button variant="outline" size="icon" onClick={handleNext} className="w-14 h-14 rounded-full border-2 hover:border-primary group" aria-label="Next testimonial">
