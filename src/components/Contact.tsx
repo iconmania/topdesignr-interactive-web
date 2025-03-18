@@ -3,9 +3,10 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Mail, Phone, Send } from "lucide-react";
+import { MapPin, Mail, Phone, Send, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMousePosition } from "@/hooks/useMousePosition";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 
 export default function Contact() {
   const [name, setName] = useState("");
@@ -150,17 +151,18 @@ export default function Contact() {
                 />
               </div>
               
-              <Button 
+              <MagneticButton 
                 type="submit" 
-                className="w-full group relative overflow-hidden h-16 text-lg font-medium tracking-wider rounded-xl"
+                className="w-full h-16 text-lg font-medium tracking-wider"
                 disabled={isSubmitting}
+                strength={15}
               >
-                <span className="relative z-10 transition-transform duration-500 group-hover:translate-x-2 flex items-center justify-center">
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                <span className="relative z-10 transition-transform duration-500 flex items-center justify-center">
+                  {isSubmitting ? "Sending..." : "Send Message"} 
                   <Send className="ml-2 h-5 w-5 transition-all duration-300 group-hover:translate-x-1" />
+                  <Sparkles className="absolute -right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 h-4 w-4" />
                 </span>
-                <span className="absolute inset-0 bg-primary z-0 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500"></span>
-              </Button>
+              </MagneticButton>
             </form>
           </div>
           

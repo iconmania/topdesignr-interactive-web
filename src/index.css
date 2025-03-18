@@ -13,6 +13,7 @@
     --popover: 210 50% 98%;
     --popover-foreground: 222 47% 11%;
     --primary: 217 91% 60%;
+    --primary-rgb: 59, 130, 246; /* RGB value for primary color */
     --primary-foreground: 210 40% 98%;
     --secondary: 214 32% 91%;
     --secondary-foreground: 222 47% 11%;
@@ -37,6 +38,7 @@
     --popover: 222 47% 4%;
     --popover-foreground: 214 32% 91%;
     --primary: 142 71% 45%;
+    --primary-rgb: 34, 197, 94; /* RGB value for primary color */
     --primary-foreground: 222 47% 4%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 214 32% 91%;
@@ -85,19 +87,20 @@
     @apply from-green-400 to-cyan-400;
   }
   
+  /* Enhanced button animations */
   .button-animation {
-    @apply hover:scale-105 transition-all duration-300 active:scale-95;
+    @apply relative overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95;
   }
   
   .light .button-animation:hover {
-    @apply shadow-md shadow-blue-500/20;
+    @apply shadow-lg shadow-blue-500/20;
   }
   
   .dark .button-animation:hover {
-    @apply shadow-md shadow-green-500/20;
+    @apply shadow-lg shadow-green-500/20;
   }
 
-  /* Enhanced button animations */
+  /* Animated button styles */
   .animated-button {
     @apply relative overflow-hidden;
   }
@@ -119,16 +122,20 @@
     @apply shadow-lg shadow-green-500/30;
   }
 
-  /* Updated button hover effects */
+  /* Button hover effects */
+  button {
+    @apply rounded-full transition-all duration-300;
+  }
+
   .light button:hover:not([disabled]) {
-    @apply bg-blue-600/90 text-blue-50 shadow-md shadow-blue-500/20;
+    @apply shadow-md shadow-blue-500/20;
   }
 
   .dark button:hover:not([disabled]) {
-    @apply bg-green-600/90 text-green-50 shadow-md shadow-green-500/20;
+    @apply shadow-md shadow-green-500/20;
   }
 
-  /* Enhanced button states */
+  /* Button states */
   button:active:not([disabled]) {
     @apply transform scale-95 transition-transform;
   }
@@ -144,12 +151,22 @@
   
   .btn-glow::after {
     content: '';
-    @apply absolute inset-0 rounded-xl bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 opacity-0 transition-opacity duration-1000;
+    @apply absolute inset-0 rounded-full bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 opacity-0 transition-opacity duration-1000;
   }
   
   .btn-glow:hover::after {
     @apply opacity-100;
     animation: btn-glow-sweep 2s ease-in-out infinite;
+  }
+  
+  /* Shine animation */
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(300%) skewX(-12deg);
+    }
   }
   
   @keyframes btn-glow-sweep {
@@ -161,16 +178,17 @@
     }
   }
 
-  /* Existing animations */
+  /* Pulse animation */
   @keyframes pulse-slow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
   }
 
   .animate-pulse-slow {
     animation: pulse-slow 3s infinite ease-in-out;
   }
 
+  /* Float animation */
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }
@@ -180,6 +198,7 @@
     animation: float 6s infinite ease-in-out;
   }
 
+  /* Cursor blink animation */
   @keyframes cursor-blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
