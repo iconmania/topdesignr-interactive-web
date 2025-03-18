@@ -1,8 +1,6 @@
-
 import { useRef, useState, useEffect } from "react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { MagneticButton } from "@/components/ui/magnetic-button";
-
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -13,7 +11,6 @@ export default function About() {
     normalizedX,
     normalizedY
   } = useMousePosition();
-  
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -35,7 +32,6 @@ export default function About() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   return <section id="about" ref={sectionRef} className="py-32 px-6 md:px-12 bg-secondary/30 relative overflow-hidden" data-cursor="text">
       {/* Interactive mouse glow effect */}
       <div className="absolute pointer-events-none rounded-full bg-primary/5 mix-blend-overlay blur-3xl" style={{
@@ -102,16 +98,12 @@ export default function About() {
             }}></div>
             </div>
             
-            <MagneticButton 
-              className="mt-6 font-medium tracking-wider"
-              strength={30}
-              style={{
-                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                opacity: isVisible ? 1 : 0,
-                transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
-                transitionDelay: '0.9s'
-              }}
-            >
+            <MagneticButton strength={30} style={{
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            opacity: isVisible ? 1 : 0,
+            transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
+            transitionDelay: '0.9s'
+          }} className="button-animation mt-6 font-medium tracking-wider">
               LEARN MORE
             </MagneticButton>
           </div>
@@ -119,26 +111,18 @@ export default function About() {
           <div className={`relative transition-all duration-700 delay-300 h-full ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-20"}`}>
             {/* Image with glass effect box */}
             <div className="relative aspect-square rounded-lg overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
-                alt="Our team collaborating" 
-                className="w-full h-full object-cover"
-                style={{
-                  transform: `translateX(${normalizedX * -15}px) translateY(${normalizedY * -15}px)`,
-                  transition: 'transform 0.3s ease-out',
-                }}
-              />
+              <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our team collaborating" className="w-full h-full object-cover" style={{
+              transform: `translateX(${normalizedX * -15}px) translateY(${normalizedY * -15}px)`,
+              transition: 'transform 0.3s ease-out'
+            }} />
               
               {/* Glass effect box for core values - adjusted position and size */}
-              <div 
-                className="absolute bottom-20 -right-8 max-w-[90%] w-[350px] backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-l-2xl"
-                style={{
-                  transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-                  opacity: isVisible ? 1 : 0,
-                  transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
-                  transitionDelay: '0.9s'
-                }}
-              >
+              <div className="absolute bottom-20 -right-8 max-w-[90%] w-[350px] backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-l-2xl" style={{
+              transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+              opacity: isVisible ? 1 : 0,
+              transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
+              transitionDelay: '0.9s'
+            }}>
                 <h3 className="text-xl font-bold mb-4">Our Core Values</h3>
                 <ul className="space-y-3">
                   <li className="flex items-center">
