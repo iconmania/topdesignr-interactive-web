@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight, ArrowLeft, Palette, LineChart, LayoutGrid, Globe, Layers } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
@@ -209,10 +210,9 @@ export default function Services() {
               variant="outline" 
               size="icon" 
               onClick={() => handleScroll('left')}
-              className="animated-button" 
+              className="animated-button rounded-full" 
               disabled={scrollPosition <= 0}
               strength={25}
-              rounded={true}
             >
               <ArrowLeft className="h-4 w-4" />
             </MagneticButton>
@@ -220,10 +220,9 @@ export default function Services() {
               variant="outline" 
               size="icon" 
               onClick={() => handleScroll('right')}
-              className="animated-button"
+              className="animated-button rounded-full"
               disabled={scrollPosition >= maxScroll}
               strength={25}
-              rounded={true}
             >
               <ArrowRight className="h-4 w-4" />
             </MagneticButton>

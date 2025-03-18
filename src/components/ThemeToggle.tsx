@@ -15,10 +15,9 @@ export default function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="w-10 h-10 relative overflow-hidden"
+      className="w-10 h-10 relative overflow-hidden rounded-full"
       aria-label="Toggle theme"
       strength={20}
-      rounded={true}
     >
       <div className="absolute inset-0 bg-primary/10 rounded-full scale-0 transition-transform duration-500 group-hover:scale-100"></div>
       {theme === "light" ? (
