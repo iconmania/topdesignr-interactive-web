@@ -129,9 +129,9 @@ export default function About() {
                 }}
               />
               
-              {/* Glass effect box for core values - adjusted position */}
+              {/* Glass effect box for core values - adjusted position and size */}
               <div 
-                className="absolute bottom-10 right-0 max-w-[80%] backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-l-2xl"
+                className="absolute bottom-20 -right-8 max-w-[90%] w-[350px] backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-l-2xl"
                 style={{
                   transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
                   opacity: isVisible ? 1 : 0,

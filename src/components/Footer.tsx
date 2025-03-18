@@ -167,7 +167,8 @@ export default function Footer() {
               <MagneticButton
                 type="submit"
                 variant="default"
-                className="bg-white text-black px-5 py-2 font-medium hover:bg-white/90 transition-colors duration-300 rounded-none"
+                className="rounded-none px-5 py-2 font-medium hover:bg-white/90 bg-white text-black"
+                strength={15}
               >
                 Subscribe
               </MagneticButton>

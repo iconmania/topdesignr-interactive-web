@@ -296,11 +296,11 @@ export default function Services() {
                   
                   <MagneticButton 
                     variant="link" 
-                    className="inline-flex items-center text-primary font-medium group p-0"
+                    className="inline-flex items-center text-primary p-0 group w-auto h-auto"
                     strength={20}
                   >
-                    <span className="mr-2 group-hover:mr-4 transition-all duration-300">Learn more</span>
-                    <ArrowRight className="h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
+                    <span className="font-medium">Learn more</span>
+                    <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                   </MagneticButton>
                 </CardContent>
               </Card>
