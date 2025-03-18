@@ -103,7 +103,7 @@ export default function About() {
             </div>
             
             <MagneticButton 
-              className="group overflow-hidden relative px-8 py-6 text-lg font-medium tracking-wider mt-6 bg-primary text-primary-foreground rounded-full" 
+              className="mt-6 font-medium tracking-wider"
               strength={30}
               style={{
                 transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -112,14 +112,12 @@ export default function About() {
                 transitionDelay: '0.9s'
               }}
             >
-              <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-500">
-                LEARN MORE
-              </span>
+              LEARN MORE
             </MagneticButton>
           </div>
           
           <div className={`relative transition-all duration-700 delay-300 h-full ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-20"}`}>
-            {/* Replace SVG with image */}
+            {/* Image with glass effect box */}
             <div className="relative aspect-square rounded-lg overflow-hidden">
               <img 
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
@@ -131,9 +129,9 @@ export default function About() {
                 }}
               />
               
-              {/* Glass effect box for core values */}
+              {/* Glass effect box for core values - adjusted position */}
               <div 
-                className="absolute bottom-0 left-0 right-0 backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-t-2xl"
+                className="absolute bottom-10 right-0 max-w-[80%] backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-l-2xl"
                 style={{
                   transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
                   opacity: isVisible ? 1 : 0,

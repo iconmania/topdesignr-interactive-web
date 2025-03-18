@@ -6,25 +6,22 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden group",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative overflow-hidden",
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:shadow-lg hover:shadow-primary/30 hover:translate-y-[-2px] active:translate-y-[1px]",
-        destructive:
-          "bg-gradient-to-r from-destructive to-destructive/80 text-destructive-foreground hover:shadow-lg hover:shadow-destructive/30 hover:translate-y-[-2px] active:translate-y-[1px]",
-        outline:
-          "border border-input bg-background hover:bg-accent/10 hover:text-accent-foreground hover:border-primary/50 hover:translate-y-[-2px] active:translate-y-[1px]",
-        secondary:
-          "bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground hover:shadow-md hover:translate-y-[-2px] active:translate-y-[1px]",
-        ghost: "hover:bg-accent/10 hover:text-accent-foreground hover:shadow-sm hover:translate-y-[-2px] active:translate-y-[1px]",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98]",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:scale-[0.98]",
+        outline: "border border-input bg-background hover:bg-accent/10 hover:border-primary active:scale-[0.98]",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-[0.98]",
+        ghost: "hover:bg-accent/10 active:scale-[0.98]",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-5 py-2 rounded-full",
-        sm: "h-9 rounded-full px-4",
-        lg: "h-11 rounded-full px-8",
-        icon: "h-10 w-10 rounded-full",
+        default: "h-10 px-5 py-2",
+        sm: "h-9 px-4",
+        lg: "h-11 px-8",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
@@ -48,12 +45,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      >
-        <span className="relative z-10 flex items-center justify-center">
-          {props.children}
-        </span>
-        <span className="absolute top-0 left-0 w-20 h-full bg-white/10 transform -skew-x-20 translate-x-[-150%] group-hover:translate-x-[200%] transition-transform duration-700 ease-in-out z-0"></span>
-      </Comp>
+      />
     )
   }
 )

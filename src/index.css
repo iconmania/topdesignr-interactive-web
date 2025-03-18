@@ -87,76 +87,27 @@
     @apply from-green-400 to-cyan-400;
   }
   
-  /* Enhanced button animations */
+  /* Clean button styles */
   .button-animation {
-    @apply relative overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95;
+    @apply transition-all duration-300 hover:shadow-md active:scale-95;
   }
   
   .light .button-animation:hover {
-    @apply shadow-lg shadow-blue-500/20;
+    @apply shadow-md shadow-blue-500/20;
   }
   
   .dark .button-animation:hover {
-    @apply shadow-lg shadow-green-500/20;
-  }
-
-  /* Animated button styles - simplified */
-  .animated-button {
-    @apply relative overflow-hidden;
-  }
-
-  .animated-button::before {
-    content: '';
-    @apply absolute inset-0 bg-primary/10 scale-0 transition-transform duration-500 origin-center;
-  }
-
-  .animated-button:hover::before {
-    @apply scale-100;
-  }
-
-  .light .animated-button:hover {
-    @apply shadow-lg shadow-blue-500/30;
-  }
-
-  .dark .animated-button:hover {
-    @apply shadow-lg shadow-green-500/30;
-  }
-
-  /* Button hover effects */
-  button {
-    @apply rounded-full transition-all duration-300;
-  }
-
-  .light button:hover:not([disabled]) {
-    @apply shadow-md shadow-blue-500/20;
-  }
-
-  .dark button:hover:not([disabled]) {
     @apply shadow-md shadow-green-500/20;
   }
 
-  /* Button states */
-  button:active:not([disabled]) {
-    @apply transform scale-95 transition-transform;
+  /* Simple hover effect for outlined buttons */
+  .outline-button {
+    @apply border border-primary/20 hover:border-primary transition-colors duration-300;
   }
 
+  /* Button states */
   button:focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2;
-  }
-
-  /* Button shine effect - simplified */
-  .btn-shine {
-    @apply relative overflow-hidden;
-  }
-  
-  .btn-shine::after {
-    content: '';
-    @apply absolute top-0 left-0 w-20 h-full bg-white/10 transform -skew-x-20 translate-x-[-150%] opacity-0;
-  }
-  
-  .btn-shine:hover::after {
-    @apply translate-x-[200%] opacity-100;
-    transition: transform 0.7s ease-in-out, opacity 0.1s ease-in-out;
   }
 
   /* Scrollbar utilities */
@@ -167,5 +118,10 @@
   
   .scrollbar-none::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+  }
+  
+  /* Glass effect for cards */
+  .glass-card {
+    @apply bg-background/80 backdrop-blur-md border border-border/50 rounded-xl shadow-sm;
   }
 }

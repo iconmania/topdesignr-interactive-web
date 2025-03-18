@@ -107,22 +107,22 @@ export default function CallToAction() {
           >
             <MagneticButton 
               size="lg" 
-              className="animated-button bg-white text-black hover:bg-white/90 px-8 py-7 text-lg"
+              className="bg-white text-black hover:bg-white/90 px-8 py-7 text-lg"
               strength={15}
             >
-              <span className="relative z-10 flex items-center">
+              <span className="flex items-center">
                 START A PROJECT
-                <ArrowRight className="ml-2 h-5 w-5 transition-all duration-300 transform translate-x-[-5px] opacity-0 group-hover:translate-x-0 group-hover:opacity-100" />
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
             </MagneticButton>
             
             <MagneticButton 
               variant="outline" 
               size="lg"
-              className="animated-button border-white text-white dark:text-white light:text-foreground hover:bg-white/10 px-8 py-7 text-lg"
+              className="border-white text-white hover:bg-white/10 px-8 py-7 text-lg"
               strength={15}
             >
-              <span className="relative z-10">VIEW OUR PROCESS</span>
+              VIEW OUR PROCESS
             </MagneticButton>
           </div>
         </div>
