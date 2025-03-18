@@ -83,17 +83,6 @@ export default function CallToAction() {
         }}
       ></div>
       
-      {/* Typographical Element */}
-      <div 
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-10"
-        style={{
-          transform: `translate(${normalizedX * 30}px, ${normalizedY * 30}px)`,
-          transition: 'transform 0.3s ease-out',
-        }}
-      >
-        <h1 className="text-[25vw] font-black text-white">CTA</h1>
-      </div>
-      
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div 
           className={`text-center transition-all duration-700 ${
@@ -130,7 +119,7 @@ export default function CallToAction() {
             <MagneticButton 
               variant="outline" 
               size="lg"
-              className="animated-button border-white text-white hover:bg-white/10 px-8 py-7 text-lg"
+              className="animated-button border-white text-white dark:text-white light:text-foreground hover:bg-white/10 px-8 py-7 text-lg"
               strength={15}
             >
               <span className="relative z-10">VIEW OUR PROCESS</span>

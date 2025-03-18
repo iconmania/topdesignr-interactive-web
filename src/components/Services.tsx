@@ -1,4 +1,3 @@
-
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight, ArrowLeft, Palette, LineChart, LayoutGrid, Globe, Layers } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
@@ -251,7 +250,6 @@ export default function Services() {
             style={{ 
               scrollBehavior: 'auto', 
               scrollSnapType: 'none',
-              perspective: '1000px'
             }}
           >
             {services.map(service => (
@@ -265,16 +263,9 @@ export default function Services() {
                 onMouseLeave={() => setHoverService(null)}
                 style={{
                   transitionDelay: `${service.id * 100}ms`,
-                  transform: `
-                    perspective(1200px) 
-                    rotateX(${normalizedY * 12}deg) 
-                    rotateY(${normalizedX * 12}deg)
-                    translateZ(${hoverService === service.id ? 40 : 0}px)
-                    scale(${hoverService === service.id ? 1.05 : 1})
-                  `,
-                  transformStyle: 'preserve-3d',
+                  transform: `scale(${hoverService === service.id ? 1.05 : 1})`,
                   boxShadow: hoverService === service.id 
-                    ? '0 20px 40px rgba(0, 0, 0, 0.2), 0 0 25px rgba(var(--primary), 0.3)' 
+                    ? '0 20px 40px rgba(0, 0, 0, 0.2), 0 0 25px rgba(var(--primary-rgb), 0.3)' 
                     : '0 5px 20px rgba(0, 0, 0, 0.1)',
                   background: `linear-gradient(to bottom right, 
                     hsl(var(--card-hsl, var(--card)) / 1) 10%, 
@@ -287,30 +278,18 @@ export default function Services() {
                   <div>
                     <div 
                       className="mb-6 w-16 h-16 flex items-center justify-center text-primary rounded-full bg-primary/10"
-                      style={{
-                        transform: hoverService === service.id ? 'translateZ(30px)' : 'translateZ(0)',
-                        transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
-                      }}
                     >
                       {service.icon}
                     </div>
                     
                     <h3 
                       className="text-2xl md:text-3xl font-bold mb-4"
-                      style={{
-                        transform: hoverService === service.id ? 'translateZ(25px)' : 'translateZ(0)',
-                        transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
-                      }}
                     >
                       {service.title}
                     </h3>
                     
                     <p 
                       className="text-muted-foreground mb-8"
-                      style={{
-                        transform: hoverService === service.id ? 'translateZ(20px)' : 'translateZ(0)',
-                        transition: 'transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
-                      }}
                     >
                       {service.description}
                     </p>

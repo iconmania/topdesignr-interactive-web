@@ -100,7 +100,7 @@
     @apply shadow-lg shadow-green-500/20;
   }
 
-  /* Animated button styles */
+  /* Animated button styles - simplified */
   .animated-button {
     @apply relative overflow-hidden;
   }
@@ -144,83 +144,21 @@
     @apply outline-none ring-2 ring-primary ring-offset-2;
   }
 
-  /* Button glow effect */
-  .btn-glow {
+  /* Button shine effect - simplified */
+  .btn-shine {
     @apply relative overflow-hidden;
   }
   
-  .btn-glow::after {
+  .btn-shine::after {
     content: '';
-    @apply absolute inset-0 rounded-full bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 opacity-0 transition-opacity duration-1000;
+    @apply absolute top-0 left-0 w-20 h-full bg-white/10 transform -skew-x-20 translate-x-[-150%] opacity-0;
   }
   
-  .btn-glow:hover::after {
-    @apply opacity-100;
-    animation: btn-glow-sweep 2s ease-in-out infinite;
-  }
-  
-  /* Shine animation */
-  @keyframes shine {
-    0% {
-      transform: translateX(-100%) skewX(-12deg);
-    }
-    100% {
-      transform: translateX(300%) skewX(-12deg);
-    }
-  }
-  
-  @keyframes btn-glow-sweep {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
+  .btn-shine:hover::after {
+    @apply translate-x-[200%] opacity-100;
+    transition: transform 0.7s ease-in-out, opacity 0.1s ease-in-out;
   }
 
-  /* Pulse animation */
-  @keyframes pulse-slow {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-  }
-
-  .animate-pulse-slow {
-    animation: pulse-slow 3s infinite ease-in-out;
-  }
-
-  /* Float animation */
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
-
-  .animate-float {
-    animation: float 6s infinite ease-in-out;
-  }
-
-  /* Cursor blink animation */
-  @keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-  
-  .animate-cursor-blink {
-    animation: cursor-blink 1s infinite step-end;
-  }
-
-  /* 3D perspective helpers */
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
-
-  .backface-hidden {
-    backface-visibility: hidden;
-  }
-  
   /* Scrollbar utilities */
   .scrollbar-none {
     -ms-overflow-style: none; /* IE and Edge */

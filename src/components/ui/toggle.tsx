@@ -39,8 +39,6 @@ const Toggle = React.forwardRef<
   >
     <span className="relative z-10">{props.children}</span>
     <span className="absolute inset-0 data-[state=on]:bg-primary/20 data-[state=on]:backdrop-blur-sm transition-all duration-300"></span>
-    <span className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></span>
-    <span className="absolute top-0 left-0 w-10 h-full bg-white/20 transform -skew-x-20 translate-x-[-150%] group-hover:translate-x-[200%] transition-transform duration-500 ease-in-out z-0"></span>
   </TogglePrimitive.Root>
 ))
 

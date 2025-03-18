@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from "react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { MagneticButton } from "@/components/ui/magnetic-button";
@@ -102,7 +103,7 @@ export default function About() {
             </div>
             
             <MagneticButton 
-              className="group overflow-hidden relative px-8 py-6 text-lg font-medium tracking-wider mt-6" 
+              className="group overflow-hidden relative px-8 py-6 text-lg font-medium tracking-wider mt-6 bg-primary text-primary-foreground rounded-full" 
               strength={30}
               style={{
                 transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -114,117 +115,48 @@ export default function About() {
               <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-500">
                 LEARN MORE
               </span>
-              <span className="absolute inset-0 bg-primary z-0 translate-x-full group-hover:translate-x-0 transition-transform duration-500"></span>
             </MagneticButton>
           </div>
           
           <div className={`relative transition-all duration-700 delay-300 h-full ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-20"}`}>
-            {/* Interactive SVG Illustration */}
-            <div className="relative aspect-square" style={{
-            transform: `rotateY(${normalizedX * 10}deg) rotateX(${normalizedY * -10}deg)`,
-            transition: 'transform 0.2s ease-out',
-            transformStyle: 'preserve-3d',
-            perspective: '1000px'
-          }}>
-              <svg viewBox="0 0 600 600" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                {/* Animated Grid Pattern */}
-                <g className="stroke-primary/10">
-                  {Array.from({
-                  length: 12
-                }).map((_, i) => <line key={`h-${i}`} x1="50" y1={100 + i * 40} x2="550" y2={100 + i * 40} className="animate-float-slow opacity-50" style={{
-                  strokeWidth: "0.5",
-                  animationDelay: `${i * 0.1}s`,
-                  transform: `translateY(${Math.sin(i) * 5}px)`,
-                  transformOrigin: 'center',
-                  opacity: isVisible ? "0.5" : "0"
-                }} />)}
-                  {Array.from({
-                  length: 12
-                }).map((_, i) => <line key={`v-${i}`} x1={100 + i * 40} y1="50" x2={100 + i * 40} y2="550" className="animate-float-slow opacity-50" style={{
-                  strokeWidth: "0.5",
-                  animationDelay: `${i * 0.1}s`,
-                  transform: `translateX(${Math.cos(i) * 5}px)`,
-                  transformOrigin: 'center',
-                  opacity: isVisible ? "0.5" : "0"
-                }} />)}
-                </g>
-                
-                {/* Interactive Abstract Shapes with 3D parallax effect */}
-                <circle cx="200" cy="200" r="50" className="fill-primary/20 animate-float-slow" style={{
-                animationDelay: "0.2s",
-                transform: `translate(${normalizedX * -30}px, ${normalizedY * -30}px)`,
-                transition: "transform 0.3s ease-out",
-                transformOrigin: 'center',
-                opacity: isVisible ? "1" : "0",
-                transitionProperty: "transform, opacity",
-                transitionDuration: "0.7s",
-                transitionDelay: "0.2s"
-              }} />
-                <rect x="350" y="150" width="100" height="100" className="fill-primary/15 animate-float-slow" style={{
-                animationDelay: "0.5s",
-                transform: `rotate(${scrollY * 0.05}deg) translate(${normalizedX * 25}px, ${normalizedY * 25}px)`,
-                transformOrigin: "center",
-                transition: "transform 0.3s ease-out",
-                opacity: isVisible ? "1" : "0",
-                transitionProperty: "transform, opacity",
-                transitionDuration: "0.7s",
-                transitionDelay: "0.4s"
-              }} />
-                <polygon points="250,350 300,450 200,450" className="fill-primary/25 animate-float-slow" style={{
-                animationDelay: "0.8s",
-                transform: `translate(${normalizedX * -20}px, ${normalizedY * -20}px)`,
-                transition: "transform 0.3s ease-out",
-                transformOrigin: 'center',
-                opacity: isVisible ? "1" : "0",
-                transitionProperty: "transform, opacity",
-                transitionDuration: "0.7s",
-                transitionDelay: "0.6s"
-              }} />
-                <path d="M400,300 Q450,250 500,300 T600,300" className="stroke-primary/40 fill-none animate-float-slow" style={{
-                strokeWidth: "4",
-                animationDelay: "1.1s",
-                transform: `translate(${normalizedX * 15}px, ${normalizedY * 15}px)`,
-                transition: "transform 0.3s ease-out",
-                transformOrigin: 'center',
-                opacity: isVisible ? "1" : "0",
-                transitionProperty: "transform, opacity",
-                transitionDuration: "0.7s",
-                transitionDelay: "0.8s"
-              }} />
-                
-                {/* Core Values Labels with staggered animation */}
-                <g>
-                  <g style={{
-                  transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            {/* Replace SVG with image */}
+            <div className="relative aspect-square rounded-lg overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                alt="Our team collaborating" 
+                className="w-full h-full object-cover"
+                style={{
+                  transform: `translateX(${normalizedX * -15}px) translateY(${normalizedY * -15}px)`,
+                  transition: 'transform 0.3s ease-out',
+                }}
+              />
+              
+              {/* Glass effect box for core values */}
+              <div 
+                className="absolute bottom-0 left-0 right-0 backdrop-blur-md bg-background/20 border border-white/10 p-6 rounded-t-2xl"
+                style={{
+                  transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
                   opacity: isVisible ? 1 : 0,
                   transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
-                  transitionDelay: '1s'
-                }}>
-                    <circle cx="150" cy="380" r="5" className="fill-primary" />
-                    <text x="165" y="385" className="fill-primary font-bold text-[16px]">Creative excellence</text>
-                  </g>
-                  
-                  <g style={{
-                  transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                  opacity: isVisible ? 1 : 0,
-                  transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
-                  transitionDelay: '1.2s'
-                }}>
-                    <circle cx="150" cy="420" r="5" className="fill-primary" />
-                    <text x="165" y="425" className="fill-primary font-bold text-[16px]">Strategic thinking</text>
-                  </g>
-                  
-                  <g style={{
-                  transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                  opacity: isVisible ? 1 : 0,
-                  transition: 'transform 0.7s ease-out, opacity 0.7s ease-out',
-                  transitionDelay: '1.4s'
-                }}>
-                    <circle cx="150" cy="460" r="5" className="fill-primary" />
-                    <text x="165" y="465" className="fill-primary font-bold text-[16px]">Human-centered design</text>
-                  </g>
-                </g>
-              </svg>
+                  transitionDelay: '0.9s'
+                }}
+              >
+                <h3 className="text-xl font-bold mb-4">Our Core Values</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-primary mr-3"></div>
+                    <span>Creative excellence</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-primary mr-3"></div>
+                    <span>Strategic thinking</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 rounded-full bg-primary mr-3"></div>
+                    <span>Human-centered design</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

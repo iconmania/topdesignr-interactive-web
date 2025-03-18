@@ -52,7 +52,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span className="relative z-10 flex items-center justify-center">
           {props.children}
         </span>
-        <span className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-primary/90 to-primary transition-all duration-300 group-hover:blur-[1px] z-0"></span>
         <span className="absolute top-0 left-0 w-20 h-full bg-white/10 transform -skew-x-20 translate-x-[-150%] group-hover:translate-x-[200%] transition-transform duration-700 ease-in-out z-0"></span>
       </Comp>
     )
