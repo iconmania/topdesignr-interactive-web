@@ -42,3 +42,12 @@ export type ServiceFormValues = z.infer<typeof formSchema>;
 export interface Service extends ServiceFormValues {
   id: number;
 }
+
+// Special field array path types to help TypeScript understand nested field arrays
+export interface FieldArrayPathValue<T> {
+  [key: string]: T;
+}
+
+export type BenefitType = string;
+export type ProcessType = string;
+export type PricingFeatureType = string;
