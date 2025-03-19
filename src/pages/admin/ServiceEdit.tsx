@@ -114,37 +114,37 @@ export default function ServiceEdit() {
   });
 
   // Field arrays for dynamic fields
-  const benefitsArray = useFieldArray({
+  const { fields: benefitsFields, append: appendBenefit, remove: removeBenefit } = useFieldArray({
     control: form.control,
     name: "benefits"
   });
 
-  const processArray = useFieldArray({
+  const { fields: processFields, append: appendProcess, remove: removeProcess } = useFieldArray({
     control: form.control,
     name: "process"
   });
 
-  const caseStudiesArray = useFieldArray({
+  const { fields: caseStudiesFields, append: appendCaseStudy, remove: removeCaseStudy } = useFieldArray({
     control: form.control,
     name: "caseStudies"
   });
 
-  const faqArray = useFieldArray({
+  const { fields: faqFields, append: appendFaq, remove: removeFaq } = useFieldArray({
     control: form.control,
     name: "faq"
   });
 
-  const starterFeaturesArray = useFieldArray({
+  const { fields: starterFeaturesFields, append: appendStarterFeature, remove: removeStarterFeature } = useFieldArray({
     control: form.control,
     name: "pricing.starter.features"
   });
 
-  const professionalFeaturesArray = useFieldArray({
+  const { fields: professionalFeaturesFields, append: appendProfessionalFeature, remove: removeProfessionalFeature } = useFieldArray({
     control: form.control,
     name: "pricing.professional.features"
   });
 
-  const enterpriseFeaturesArray = useFieldArray({
+  const { fields: enterpriseFeaturesFields, append: appendEnterpriseFeature, remove: removeEnterpriseFeature } = useFieldArray({
     control: form.control,
     name: "pricing.enterprise.features"
   });
@@ -275,13 +275,13 @@ export default function ServiceEdit() {
 
   const addBenefit = () => {
     if (!newBenefit.trim()) return;
-    benefitsArray.append(newBenefit);
+    appendBenefit(newBenefit);
     setNewBenefit("");
   };
 
   const addProcess = () => {
     if (!newProcess.trim()) return;
-    processArray.append(newProcess);
+    appendProcess(newProcess);
     setNewProcess("");
   };
 
@@ -421,17 +421,16 @@ export default function ServiceEdit() {
                     </div>
 
                     <div className="space-y-2">
-                      {benefitsArray.fields.map((field, index) => (
+                      {benefitsFields.map((field, index) => (
                         <div key={field.id} className="flex items-center gap-2">
                           <Input
                             {...form.register(`benefits.${index}`)}
-                            defaultValue={field.value}
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => benefitsArray.remove(index)}
+                            onClick={() => removeBenefit(index)}
                           >
                             <X className="h-4 w-4 text-destructive" />
                           </Button>
@@ -460,21 +459,20 @@ export default function ServiceEdit() {
                     </div>
 
                     <div className="space-y-2">
-                      {processArray.fields.map((field, index) => (
+                      {processFields.map((field, index) => (
                         <div key={field.id} className="flex items-center gap-2">
                           <div className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">
                             {index + 1}
                           </div>
                           <Input
                             {...form.register(`process.${index}`)}
-                            defaultValue={field.value}
                             className="flex-1"
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => processArray.remove(index)}
+                            onClick={() => removeProcess(index)}
                           >
                             <X className="h-4 w-4 text-destructive" />
                           </Button>
@@ -526,17 +524,16 @@ export default function ServiceEdit() {
                       <div>
                         <FormLabel>Features</FormLabel>
                         <div className="space-y-2 mt-2">
-                          {starterFeaturesArray.fields.map((field, index) => (
+                          {starterFeaturesFields.map((field, index) => (
                             <div key={field.id} className="flex items-center gap-2">
                               <Input
                                 {...form.register(`pricing.starter.features.${index}`)}
-                                defaultValue={field.value}
                               />
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => starterFeaturesArray.remove(index)}
+                                onClick={() => removeStarterFeature(index)}
                               >
                                 <X className="h-4 w-4 text-destructive" />
                               </Button>
@@ -547,7 +544,7 @@ export default function ServiceEdit() {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => starterFeaturesArray.append("")}
+                            onClick={() => appendStarterFeature("")}
                             className="w-full mt-2"
                           >
                             <Plus className="h-4 w-4 mr-1" />
@@ -593,17 +590,16 @@ export default function ServiceEdit() {
                       <div>
                         <FormLabel>Features</FormLabel>
                         <div className="space-y-2 mt-2">
-                          {professionalFeaturesArray.fields.map((field, index) => (
+                          {professionalFeaturesFields.map((field, index) => (
                             <div key={field.id} className="flex items-center gap-2">
                               <Input
                                 {...form.register(`pricing.professional.features.${index}`)}
-                                defaultValue={field.value}
                               />
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => professionalFeaturesArray.remove(index)}
+                                onClick={() => removeProfessionalFeature(index)}
                               >
                                 <X className="h-4 w-4 text-destructive" />
                               </Button>
@@ -614,7 +610,7 @@ export default function ServiceEdit() {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => professionalFeaturesArray.append("")}
+                            onClick={() => appendProfessionalFeature("")}
                             className="w-full mt-2"
                           >
                             <Plus className="h-4 w-4 mr-1" />
@@ -660,17 +656,16 @@ export default function ServiceEdit() {
                       <div>
                         <FormLabel>Features</FormLabel>
                         <div className="space-y-2 mt-2">
-                          {enterpriseFeaturesArray.fields.map((field, index) => (
+                          {enterpriseFeaturesFields.map((field, index) => (
                             <div key={field.id} className="flex items-center gap-2">
                               <Input
                                 {...form.register(`pricing.enterprise.features.${index}`)}
-                                defaultValue={field.value}
                               />
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => enterpriseFeaturesArray.remove(index)}
+                                onClick={() => removeEnterpriseFeature(index)}
                               >
                                 <X className="h-4 w-4 text-destructive" />
                               </Button>
@@ -681,7 +676,7 @@ export default function ServiceEdit() {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => enterpriseFeaturesArray.append("")}
+                            onClick={() => appendEnterpriseFeature("")}
                             className="w-full mt-2"
                           >
                             <Plus className="h-4 w-4 mr-1" />
@@ -699,7 +694,7 @@ export default function ServiceEdit() {
                   <h3 className="text-lg font-medium mb-4">FAQs</h3>
 
                   <div className="space-y-4">
-                    {faqArray.fields.map((field, index) => (
+                    {faqFields.map((field, index) => (
                       <div key={field.id} className="border p-4 rounded-md">
                         <div className="flex justify-between items-center mb-3">
                           <h4 className="font-medium">FAQ #{index + 1}</h4>
@@ -707,7 +702,7 @@ export default function ServiceEdit() {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => faqArray.remove(index)}
+                            onClick={() => removeFaq(index)}
                           >
                             <Trash className="h-4 w-4 text-destructive" />
                           </Button>
@@ -748,7 +743,7 @@ export default function ServiceEdit() {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => faqArray.append({ question: "", answer: "" })}
+                      onClick={() => appendFaq({ question: "", answer: "" })}
                       className="w-full"
                     >
                       <Plus className="h-4 w-4 mr-1" />
@@ -763,7 +758,7 @@ export default function ServiceEdit() {
                   <h3 className="text-lg font-medium mb-4">Case Studies</h3>
 
                   <div className="space-y-4">
-                    {caseStudiesArray.fields.map((field, index) => (
+                    {caseStudiesFields.map((field, index) => (
                       <div key={field.id} className="border p-4 rounded-md">
                         <div className="flex justify-between items-center mb-3">
                           <h4 className="font-medium">Case Study #{index + 1}</h4>
@@ -771,7 +766,7 @@ export default function ServiceEdit() {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => caseStudiesArray.remove(index)}
+                            onClick={() => removeCaseStudy(index)}
                           >
                             <Trash className="h-4 w-4 text-destructive" />
                           </Button>
@@ -826,7 +821,7 @@ export default function ServiceEdit() {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => caseStudiesArray.append({ title: "", client: "", description: "" })}
+                      onClick={() => appendCaseStudy({ title: "", client: "", description: "" })}
                       className="w-full"
                     >
                       <Plus className="h-4 w-4 mr-1" />
