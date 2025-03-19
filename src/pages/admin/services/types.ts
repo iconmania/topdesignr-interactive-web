@@ -43,11 +43,17 @@ export interface Service extends ServiceFormValues {
   id: number;
 }
 
-// Special field array path types to help TypeScript understand nested field arrays
-export interface FieldArrayPathValue<T> {
-  [key: string]: T;
-}
-
+// Field array types for benefits, process, and pricing features
 export type BenefitType = string;
 export type ProcessType = string;
 export type PricingFeatureType = string;
+
+// Custom field array path types
+export type FieldArrayPath = 
+  | "benefits" 
+  | "process" 
+  | "caseStudies" 
+  | "faq" 
+  | "pricing.starter.features" 
+  | "pricing.professional.features" 
+  | "pricing.enterprise.features";

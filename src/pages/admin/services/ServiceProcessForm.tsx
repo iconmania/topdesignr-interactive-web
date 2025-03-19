@@ -15,12 +15,12 @@ export function ServiceProcessForm({ form }: ServiceProcessFormProps) {
   
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "process"
+    name: "process" as const
   });
 
   const addProcess = () => {
     if (!newProcess.trim()) return;
-    append(newProcess);
+    append(newProcess as any);
     setNewProcess("");
   };
 

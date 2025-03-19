@@ -18,34 +18,34 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
   
   const starterFeatures = useFieldArray({
     control: form.control,
-    name: "pricing.starter.features"
+    name: "pricing.starter.features" as const
   });
   
   const professionalFeatures = useFieldArray({
     control: form.control,
-    name: "pricing.professional.features"
+    name: "pricing.professional.features" as const
   });
   
   const enterpriseFeatures = useFieldArray({
     control: form.control,
-    name: "pricing.enterprise.features"
+    name: "pricing.enterprise.features" as const
   });
 
   const handleAddStarterFeature = () => {
     if (!newStarterFeature.trim()) return;
-    starterFeatures.append(newStarterFeature);
+    starterFeatures.append(newStarterFeature as any);
     setNewStarterFeature("");
   };
 
   const handleAddProfessionalFeature = () => {
     if (!newProfessionalFeature.trim()) return;
-    professionalFeatures.append(newProfessionalFeature);
+    professionalFeatures.append(newProfessionalFeature as any);
     setNewProfessionalFeature("");
   };
 
   const handleAddEnterpriseFeature = () => {
     if (!newEnterpriseFeature.trim()) return;
-    enterpriseFeatures.append(newEnterpriseFeature);
+    enterpriseFeatures.append(newEnterpriseFeature as any);
     setNewEnterpriseFeature("");
   };
 
