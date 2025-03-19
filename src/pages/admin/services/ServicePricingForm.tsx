@@ -16,36 +16,36 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
   const [newProfessionalFeature, setNewProfessionalFeature] = useState("");
   const [newEnterpriseFeature, setNewEnterpriseFeature] = useState("");
   
-  const starterFeatures = useFieldArray({
+  const starterFeatures = useFieldArray<ServiceFormValues>({
     control: form.control,
-    name: "pricing.starter.features" as const
+    name: "pricing.starter.features"
   });
   
-  const professionalFeatures = useFieldArray({
+  const professionalFeatures = useFieldArray<ServiceFormValues>({
     control: form.control,
-    name: "pricing.professional.features" as const
+    name: "pricing.professional.features"
   });
   
-  const enterpriseFeatures = useFieldArray({
+  const enterpriseFeatures = useFieldArray<ServiceFormValues>({
     control: form.control,
-    name: "pricing.enterprise.features" as const
+    name: "pricing.enterprise.features"
   });
 
   const handleAddStarterFeature = () => {
     if (!newStarterFeature.trim()) return;
-    starterFeatures.append(newStarterFeature as any);
+    starterFeatures.append(newStarterFeature);
     setNewStarterFeature("");
   };
 
   const handleAddProfessionalFeature = () => {
     if (!newProfessionalFeature.trim()) return;
-    professionalFeatures.append(newProfessionalFeature as any);
+    professionalFeatures.append(newProfessionalFeature);
     setNewProfessionalFeature("");
   };
 
   const handleAddEnterpriseFeature = () => {
     if (!newEnterpriseFeature.trim()) return;
-    enterpriseFeatures.append(newEnterpriseFeature as any);
+    enterpriseFeatures.append(newEnterpriseFeature);
     setNewEnterpriseFeature("");
   };
 

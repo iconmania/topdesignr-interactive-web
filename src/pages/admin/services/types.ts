@@ -47,13 +47,3 @@ export interface Service extends ServiceFormValues {
 export type BenefitType = string;
 export type ProcessType = string;
 export type PricingFeatureType = string;
-
-// Custom field array path types
-export type FieldArrayPath = 
-  | "benefits" 
-  | "process" 
-  | "caseStudies" 
-  | "faq" 
-  | "pricing.starter.features" 
-  | "pricing.professional.features" 
-  | "pricing.enterprise.features";

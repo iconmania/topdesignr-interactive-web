@@ -15,12 +15,12 @@ export function ServiceBenefitsForm({ form }: ServiceBenefitsFormProps) {
   
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "benefits" as const
+    name: "benefits"
   });
 
   const addBenefit = () => {
     if (!newBenefit.trim()) return;
-    append(newBenefit as any);
+    append(newBenefit);
     setNewBenefit("");
   };
 
