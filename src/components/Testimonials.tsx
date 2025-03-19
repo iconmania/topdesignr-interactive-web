@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from "react";
 import { Quote, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMousePosition } from "@/hooks/useMousePosition";
-import { MagneticButton } from "@/components/ui/magnetic-button";
 
 type Testimonial = {
   id: number;
@@ -66,7 +65,7 @@ export default function Testimonials() {
         }
       ]);
     }
-    
+
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsVisible(true);
@@ -85,202 +84,178 @@ export default function Testimonials() {
     };
   }, []);
 
-  const handlePrev = () => {
+  const nextTestimonial = () => {
     if (isAnimating || testimonials.length <= 1) return;
     
-    setIsAnimating(true);
-    setDirection('left');
-    
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-      setDirection(null);
-      
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 500);
-    }, 300);
-  };
-
-  const handleNext = () => {
-    if (isAnimating || testimonials.length <= 1) return;
-    
-    setIsAnimating(true);
     setDirection('right');
-    
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-      setDirection(null);
-      
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 500);
-    }, 300);
-  };
-
-  const goToTestimonial = (index: number) => {
-    if (isAnimating || index === activeIndex || testimonials.length <= 1) return;
-    
     setIsAnimating(true);
-    setDirection(index > activeIndex ? 'right' : 'left');
     
     setTimeout(() => {
-      setActiveIndex(index);
-      setDirection(null);
-      
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 500);
-    }, 300);
+      setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      setIsAnimating(false);
+    }, 500);
   };
 
-  // In case there are no testimonials
-  if (testimonials.length === 0) {
-    return null;
-  }
+  const prevTestimonial = () => {
+    if (isAnimating || testimonials.length <= 1) return;
+    
+    setDirection('left');
+    setIsAnimating(true);
+    
+    setTimeout(() => {
+      setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+      setIsAnimating(false);
+    }, 500);
+  };
+
+  const getTransformStyles = (index: number) => {
+    if (testimonials.length <= 1) return {};
+    
+    if (index === activeIndex) {
+      if (isAnimating) {
+        return {
+          transform: `translateX(${direction === 'left' ? '100%' : '-100%'})`,
+          opacity: 0
+        };
+      }
+      return {
+        transform: 'translateX(0)',
+        opacity: 1
+      };
+    } else if (
+      index === (activeIndex + 1) % testimonials.length && 
+      direction === 'right' && 
+      isAnimating
+    ) {
+      return {
+        transform: 'translateX(0)',
+        opacity: 1
+      };
+    } else if (
+      index === (activeIndex - 1 + testimonials.length) % testimonials.length && 
+      direction === 'left' && 
+      isAnimating
+    ) {
+      return {
+        transform: 'translateX(0)',
+        opacity: 1
+      };
+    } else if (index === (activeIndex + 1) % testimonials.length) {
+      return {
+        transform: 'translateX(100%)',
+        opacity: 0
+      };
+    } else if (index === (activeIndex - 1 + testimonials.length) % testimonials.length) {
+      return {
+        transform: 'translateX(-100%)',
+        opacity: 0
+      };
+    } else {
+      return {
+        transform: 'translateX(0)',
+        opacity: 0,
+        position: 'absolute',
+        pointerEvents: 'none'
+      };
+    }
+  };
 
   return (
-    <section id="testimonials" ref={sectionRef} className="py-32 px-6 md:px-12 bg-secondary/30 relative overflow-hidden" data-cursor="text">
-      {/* Background glowing effect */}
-      <div className="absolute pointer-events-none rounded-full bg-primary/5 mix-blend-overlay blur-3xl" style={{
-        width: '40vw',
-        height: '40vw',
-        left: `calc(50% + ${normalizedX * 20}px)`,
-        top: `calc(50% + ${normalizedY * 20}px)`,
-        transform: 'translate(-50%, -50%)',
-        opacity: isVisible ? 0.8 : 0,
-        transition: 'opacity 0.5s ease-out, left 0.3s ease-out, top 0.3s ease-out'
-      }}></div>
-      
-      {/* Large Quote Background */}
-      <div className="absolute pointer-events-none left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5 z-0">
-        <Quote className="w-[30vw] h-[30vw] text-primary" />
-      </div>
+    <section 
+      id="testimonials" 
+      ref={sectionRef} 
+      className="py-32 px-6 md:px-12 relative overflow-hidden"
+      data-cursor="design"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
       
       <div className="container mx-auto relative z-10">
-        <div className={`text-center mb-20 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+        <div className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className="glass py-1 rounded-full inline-flex items-center mb-4 bg-background/5 backdrop-blur-md border-0 px-0">
-            <p className="text-sm uppercase tracking-widest">Testimonials</p>
+            <p className="text-sm uppercase tracking-widest">Client Success</p>
           </div>
-          <h2 className="text-5xl md:text-6xl font-black mb-8 tracking-tighter">
-            What Our <span className="text-gradient-animated">Clients</span> Say
+          <h2 className="text-5xl md:text-6xl font-black mb-6 tracking-tighter">
+            <span className="inline-block relative">
+              <span
+                className="absolute -top-20 left-0 text-[10rem] font-black opacity-5 text-primary"
+                style={{
+                  transform: `translate(${normalizedX * 5}px, ${normalizedY * 5}px)`,
+                }}
+              >
+                "
+              </span>
+              <span className="relative">What Our <span className="text-gradient">Clients Say</span></span>
+            </span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
-            Don't just take our word for it. Here's what some of our clients have to say about working with us.
+          <p className="text-muted-foreground mb-12 max-w-md text-lg font-light">
+            Don't just take our word for it. Here's what our clients have to say about working with us.
           </p>
         </div>
         
-        <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <div className="relative">
+        <div className="max-w-5xl mx-auto md:px-10">
+          <div className={`relative h-[400px] md:h-80 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}>
             {testimonials.map((testimonial, index) => (
-              <div 
+              <div
                 key={testimonial.id}
-                className={`transition-all duration-500 absolute inset-0 flex flex-col md:flex-row items-center ${
-                  index === activeIndex 
-                    ? 'opacity-100 z-10 translate-x-0' 
-                    : 'opacity-0 z-0 translate-x-full'
-                } ${
-                  direction === 'left' && index === activeIndex ? 'animate-slide-in-right' : ''
-                } ${
-                  direction === 'right' && index === activeIndex ? 'animate-slide-up' : ''
-                }`}
-                style={{
-                  transition: 'opacity 0.5s ease, transform 0.5s ease',
-                  transform: index === activeIndex 
-                    ? 'translateX(0)' 
-                    : direction === 'left' 
-                      ? 'translateX(100px)' 
-                      : 'translateX(-100px)'
-                }}
+                className="absolute top-0 left-0 w-full h-full transition-all duration-500 ease-in-out flex flex-col md:flex-row items-center gap-6 md:gap-10"
+                style={getTransformStyles(index)}
               >
-                <div className="md:w-1/3 mb-6 md:mb-0 flex justify-center md:justify-start">
-                  <div className="relative">
-                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-background shadow-xl overflow-hidden">
-                      {testimonial.image ? (
-                        <img 
-                          src={testimonial.image} 
-                          alt={testimonial.author} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                          <Quote className="h-12 w-12 text-primary/50" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="absolute -right-2 -bottom-2 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center">
-                      <Quote className="h-4 w-4" />
-                    </div>
+                <div className="relative">
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden ring-4 ring-background shadow-lg">
+                    {testimonial.image ? (
+                      <img 
+                        src={testimonial.image} 
+                        alt={testimonial.author} 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-primary/10">
+                        <Quote className="h-10 w-10 text-primary" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center">
+                    <Quote className="h-4 w-4" />
                   </div>
                 </div>
                 
-                <div className="md:w-2/3 md:pl-8">
-                  <div className="glass p-6 rounded-xl bg-background/5 backdrop-blur-md border border-border/20">
-                    <p className="italic mb-6 text-lg">{testimonial.quote}</p>
-                    <div>
-                      <p className="font-bold text-lg">{testimonial.author}</p>
-                      <p className="text-muted-foreground">{testimonial.position}, {testimonial.company}</p>
-                    </div>
+                <div className="flex-1">
+                  <p className="text-xl md:text-2xl mb-6 italic">
+                    "{testimonial.quote}"
+                  </p>
+                  <div>
+                    <h3 className="font-bold text-lg">{testimonial.author}</h3>
+                    <p className="text-muted-foreground">
+                      {testimonial.position}, {testimonial.company}
+                    </p>
                   </div>
                 </div>
               </div>
             ))}
-            
-            {/* Create an empty container to maintain height */}
-            <div className="invisible">
-              <div className="flex flex-col md:flex-row items-center">
-                <div className="md:w-1/3 mb-6 md:mb-0">
-                  <div className="w-24 h-24 md:w-32 md:h-32"></div>
-                </div>
-                <div className="md:w-2/3 md:pl-8">
-                  <div className="p-6 rounded-xl">
-                    <p className="mb-6 text-lg">&nbsp;</p>
-                    <p className="mb-6 text-lg">&nbsp;</p>
-                    <p className="mb-6 text-lg">&nbsp;</p>
-                    <div>
-                      <p className="font-bold text-lg">&nbsp;</p>
-                      <p>&nbsp;</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
           
-          {/* Navigation Controls */}
-          <div className="flex justify-center items-center mt-12 space-x-6">
-            <MagneticButton 
-              variant="outline" 
-              size="icon" 
-              onClick={handlePrev}
-              className="button-animation rounded-full"
-              strength={25}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </MagneticButton>
-            
-            <div className="flex space-x-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === activeIndex ? 'bg-primary w-8' : 'bg-border hover:bg-primary/50'
-                  }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
+          {testimonials.length > 1 && (
+            <div className="flex justify-center mt-10 space-x-4">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={prevTestimonial}
+                className="rounded-full transition-all hover:bg-primary hover:text-primary-foreground"
+                disabled={isAnimating}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={nextTestimonial}
+                className="rounded-full transition-all hover:bg-primary hover:text-primary-foreground"
+                disabled={isAnimating}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
-            
-            <MagneticButton 
-              variant="outline" 
-              size="icon" 
-              onClick={handleNext}
-              className="button-animation rounded-full"
-              strength={25}
-            >
-              <ArrowRight className="h-5 w-5" />
-            </MagneticButton>
-          </div>
+          )}
         </div>
       </div>
     </section>
