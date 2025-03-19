@@ -3,6 +3,7 @@ import { useMousePosition } from "@/hooks/useMousePosition";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   const { normalizedX, normalizedY } = useMousePosition();
@@ -20,6 +21,13 @@ export default function Hero() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section 
@@ -107,6 +115,7 @@ export default function Hero() {
               size="lg" 
               className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-300 overflow-hidden hover:shadow-lg"
               strength={15}
+              onClick={() => scrollToSection('work')}
             >
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-2">
                 VIEW OUR WORK
@@ -118,6 +127,7 @@ export default function Hero() {
               size="lg"
               className="group relative px-8 py-7 text-lg font-medium tracking-wider transition-all duration-300 overflow-hidden hover:shadow-md"
               strength={15}
+              onClick={() => scrollToSection('contact')}
             >
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-2 flex items-center">
                 CONTACT US 

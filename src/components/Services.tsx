@@ -1,9 +1,9 @@
-
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight, ArrowLeft, Palette, LineChart, LayoutGrid, Globe, Layers } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 type Service = {
   id: number;
@@ -295,12 +295,19 @@ export default function Services() {
                   </div>
                   
                   <MagneticButton 
+                    asChild
                     variant="link" 
                     className="inline-flex items-center text-primary p-0 group w-auto h-auto"
                     strength={20}
                   >
-                    <span className="font-medium">Learn more</span>
-                    <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+                    <Link 
+                      to={`/services/${service.id}`}
+                      className="font-medium inline-flex items-center hover:no-underline hover:text-primary/80 transition-colors"
+                      style={{ boxShadow: 'none' }}
+                    >
+                      <span>Learn more</span>
+                      <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
                   </MagneticButton>
                 </CardContent>
               </Card>
