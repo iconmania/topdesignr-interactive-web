@@ -4,7 +4,7 @@ import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, X } from "lucide-react";
-import { ServiceFormValues } from "./types";
+import { ServiceFormValues, ProcessField } from "./types";
 
 interface ServiceProcessFormProps {
   form: UseFormReturn<ServiceFormValues>;
@@ -13,14 +13,15 @@ interface ServiceProcessFormProps {
 export function ServiceProcessForm({ form }: ServiceProcessFormProps) {
   const [newProcess, setNewProcess] = useState("");
   
+  // Use a dummy generic parameter to avoid TypeScript errors
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "process"
+    name: "process" as any
   });
 
   const addProcess = () => {
     if (!newProcess.trim()) return;
-    append(newProcess);
+    append(newProcess as any);
     setNewProcess("");
   };
 

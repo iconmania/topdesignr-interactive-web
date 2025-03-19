@@ -47,3 +47,18 @@ export interface Service extends ServiceFormValues {
 export type BenefitType = string;
 export type ProcessType = string;
 export type PricingFeatureType = string;
+
+// Type for benefits array item
+export interface BenefitField {
+  value: string;
+}
+
+// Type for process array item
+export interface ProcessField {
+  value: string;
+}
+
+// Type for pricing feature array item
+export interface PricingFeatureField {
+  value: string;
+}

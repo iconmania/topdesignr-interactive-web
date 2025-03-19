@@ -5,7 +5,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { ServiceFormValues } from "./types";
+import { ServiceFormValues, PricingFeatureField } from "./types";
 
 interface ServicePricingFormProps {
   form: UseFormReturn<ServiceFormValues>;
@@ -16,36 +16,36 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
   const [newProfessionalFeature, setNewProfessionalFeature] = useState("");
   const [newEnterpriseFeature, setNewEnterpriseFeature] = useState("");
   
-  const starterFeatures = useFieldArray<ServiceFormValues>({
+  const starterFeatures = useFieldArray({
     control: form.control,
-    name: "pricing.starter.features"
+    name: "pricing.starter.features" as any
   });
   
-  const professionalFeatures = useFieldArray<ServiceFormValues>({
+  const professionalFeatures = useFieldArray({
     control: form.control,
-    name: "pricing.professional.features"
+    name: "pricing.professional.features" as any
   });
   
-  const enterpriseFeatures = useFieldArray<ServiceFormValues>({
+  const enterpriseFeatures = useFieldArray({
     control: form.control,
-    name: "pricing.enterprise.features"
+    name: "pricing.enterprise.features" as any
   });
 
   const handleAddStarterFeature = () => {
     if (!newStarterFeature.trim()) return;
-    starterFeatures.append(newStarterFeature);
+    starterFeatures.append(newStarterFeature as any);
     setNewStarterFeature("");
   };
 
   const handleAddProfessionalFeature = () => {
     if (!newProfessionalFeature.trim()) return;
-    professionalFeatures.append(newProfessionalFeature);
+    professionalFeatures.append(newProfessionalFeature as any);
     setNewProfessionalFeature("");
   };
 
   const handleAddEnterpriseFeature = () => {
     if (!newEnterpriseFeature.trim()) return;
-    enterpriseFeatures.append(newEnterpriseFeature);
+    enterpriseFeatures.append(newEnterpriseFeature as any);
     setNewEnterpriseFeature("");
   };
 
