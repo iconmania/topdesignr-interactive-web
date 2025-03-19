@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, X } from "lucide-react";
-import { ServiceFormValues, BenefitType } from "./types";
+import { ServiceFormValues } from "./types";
 
 interface ServiceBenefitsFormProps {
   form: UseFormReturn<ServiceFormValues>;
@@ -13,13 +13,14 @@ interface ServiceBenefitsFormProps {
 export function ServiceBenefitsForm({ form }: ServiceBenefitsFormProps) {
   const [newBenefit, setNewBenefit] = useState("");
   
-  const { fields, append, remove } = form.control._formValues.benefits ? 
-    form.control.fieldArrays.benefits : 
-    { fields: [], append: () => {}, remove: () => {} };
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "benefits"
+  });
 
   const addBenefit = () => {
     if (!newBenefit.trim()) return;
-    append(newBenefit as any);
+    append(newBenefit);
     setNewBenefit("");
   };
 

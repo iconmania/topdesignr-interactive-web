@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { ServiceFormValues, PricingFeatureType } from "./types";
+import { ServiceFormValues } from "./types";
 
 interface ServicePricingFormProps {
   form: UseFormReturn<ServiceFormValues>;
@@ -16,66 +16,36 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
   const [newProfessionalFeature, setNewProfessionalFeature] = useState("");
   const [newEnterpriseFeature, setNewEnterpriseFeature] = useState("");
   
-  const starterFields = form.control._formValues.pricing?.starter.features ? 
-    form.control.fieldArrays["pricing.starter.features"]?.fields || [] : [];
+  const starterFeatures = useFieldArray({
+    control: form.control,
+    name: "pricing.starter.features"
+  });
   
-  const professionalFields = form.control._formValues.pricing?.professional.features ? 
-    form.control.fieldArrays["pricing.professional.features"]?.fields || [] : [];
+  const professionalFeatures = useFieldArray({
+    control: form.control,
+    name: "pricing.professional.features"
+  });
   
-  const enterpriseFields = form.control._formValues.pricing?.enterprise.features ? 
-    form.control.fieldArrays["pricing.enterprise.features"]?.fields || [] : [];
-
-  const appendStarterFeature = (value: string) => {
-    if (form.control.fieldArrays["pricing.starter.features"]) {
-      form.control.fieldArrays["pricing.starter.features"].append(value as any);
-    }
-  };
-
-  const removeStarterFeature = (index: number) => {
-    if (form.control.fieldArrays["pricing.starter.features"]) {
-      form.control.fieldArrays["pricing.starter.features"].remove(index);
-    }
-  };
-
-  const appendProfessionalFeature = (value: string) => {
-    if (form.control.fieldArrays["pricing.professional.features"]) {
-      form.control.fieldArrays["pricing.professional.features"].append(value as any);
-    }
-  };
-
-  const removeProfessionalFeature = (index: number) => {
-    if (form.control.fieldArrays["pricing.professional.features"]) {
-      form.control.fieldArrays["pricing.professional.features"].remove(index);
-    }
-  };
-
-  const appendEnterpriseFeature = (value: string) => {
-    if (form.control.fieldArrays["pricing.enterprise.features"]) {
-      form.control.fieldArrays["pricing.enterprise.features"].append(value as any);
-    }
-  };
-
-  const removeEnterpriseFeature = (index: number) => {
-    if (form.control.fieldArrays["pricing.enterprise.features"]) {
-      form.control.fieldArrays["pricing.enterprise.features"].remove(index);
-    }
-  };
+  const enterpriseFeatures = useFieldArray({
+    control: form.control,
+    name: "pricing.enterprise.features"
+  });
 
   const handleAddStarterFeature = () => {
     if (!newStarterFeature.trim()) return;
-    appendStarterFeature(newStarterFeature);
+    starterFeatures.append(newStarterFeature);
     setNewStarterFeature("");
   };
 
   const handleAddProfessionalFeature = () => {
     if (!newProfessionalFeature.trim()) return;
-    appendProfessionalFeature(newProfessionalFeature);
+    professionalFeatures.append(newProfessionalFeature);
     setNewProfessionalFeature("");
   };
 
   const handleAddEnterpriseFeature = () => {
     if (!newEnterpriseFeature.trim()) return;
-    appendEnterpriseFeature(newEnterpriseFeature);
+    enterpriseFeatures.append(newEnterpriseFeature);
     setNewEnterpriseFeature("");
   };
 
@@ -118,7 +88,7 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
           <div>
             <FormLabel>Features</FormLabel>
             <div className="space-y-2 mt-2">
-              {starterFields.map((field, index) => (
+              {starterFeatures.fields.map((field, index) => (
                 <div key={field.id} className="flex items-center gap-2">
                   <Input
                     {...form.register(`pricing.starter.features.${index}`)}
@@ -127,7 +97,7 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeStarterFeature(index)}
+                    onClick={() => starterFeatures.remove(index)}
                   >
                     <X className="h-4 w-4 text-destructive" />
                   </Button>
@@ -190,7 +160,7 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
           <div>
             <FormLabel>Features</FormLabel>
             <div className="space-y-2 mt-2">
-              {professionalFields.map((field, index) => (
+              {professionalFeatures.fields.map((field, index) => (
                 <div key={field.id} className="flex items-center gap-2">
                   <Input
                     {...form.register(`pricing.professional.features.${index}`)}
@@ -199,7 +169,7 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeProfessionalFeature(index)}
+                    onClick={() => professionalFeatures.remove(index)}
                   >
                     <X className="h-4 w-4 text-destructive" />
                   </Button>
@@ -262,7 +232,7 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
           <div>
             <FormLabel>Features</FormLabel>
             <div className="space-y-2 mt-2">
-              {enterpriseFields.map((field, index) => (
+              {enterpriseFeatures.fields.map((field, index) => (
                 <div key={field.id} className="flex items-center gap-2">
                   <Input
                     {...form.register(`pricing.enterprise.features.${index}`)}
@@ -271,7 +241,7 @@ export function ServicePricingForm({ form }: ServicePricingFormProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeEnterpriseFeature(index)}
+                    onClick={() => enterpriseFeatures.remove(index)}
                   >
                     <X className="h-4 w-4 text-destructive" />
                   </Button>

@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, X } from "lucide-react";
-import { ServiceFormValues, ProcessType } from "./types";
+import { ServiceFormValues } from "./types";
 
 interface ServiceProcessFormProps {
   form: UseFormReturn<ServiceFormValues>;
@@ -13,13 +13,14 @@ interface ServiceProcessFormProps {
 export function ServiceProcessForm({ form }: ServiceProcessFormProps) {
   const [newProcess, setNewProcess] = useState("");
   
-  const { fields, append, remove } = form.control._formValues.process ? 
-    form.control.fieldArrays.process : 
-    { fields: [], append: () => {}, remove: () => {} };
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "process"
+  });
 
   const addProcess = () => {
     if (!newProcess.trim()) return;
-    append(newProcess as any);
+    append(newProcess);
     setNewProcess("");
   };
 
