@@ -11,16 +11,19 @@ import {
   LayoutList,
   Quote,
   Menu,
-  X
+  X,
+  Sun,
+  Moon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/ui/magnetic-button";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function AdminLayout() {
   const { user, isAuthenticated, logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
   
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -112,7 +115,18 @@ export default function AdminLayout() {
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>
-              <ThemeToggle />
+              
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </Button>
             </div>
           </div>
         </div>
