@@ -14,12 +14,13 @@ type Project = {
   date?: string;
   link?: string;
   year?: string;
-  size?: "large" | "medium" | "small";
-  alignment?: "left" | "center" | "right";
+  size: "large" | "medium" | "small";
+  alignment: "left" | "center" | "right";
+  additionalImages?: string[];
 };
 
 // Default projects if no admin data exists
-const defaultProjects = [{
+const defaultProjects: Project[] = [{
   id: 1,
   title: "Quantum Brand Redesign",
   category: "Branding",
@@ -196,37 +197,44 @@ export default function Portfolio() {
     // Load portfolio items from localStorage
     const savedPortfolio = localStorage.getItem("adminPortfolio");
     if (savedPortfolio) {
-      const adminProjects = JSON.parse(savedPortfolio);
-      // Check if we have at least one valid project
-      if (adminProjects && adminProjects.length > 0) {
-        // Map admin projects to our format with proper type checking for size and alignment
-        const formattedProjects = adminProjects.map((project: any, index: number) => {
-          // Ensure size is one of the valid options
-          let size: "large" | "medium" | "small";
-          if (project.size === "large" || project.size === "medium" || project.size === "small") {
-            size = project.size;
-          } else {
-            // Default size based on index if invalid
-            size = index % 3 === 0 ? "large" : index % 3 === 1 ? "medium" : "small";
-          }
-          
-          // Ensure alignment is one of the valid options
-          let alignment: "left" | "center" | "right";
-          if (project.alignment === "left" || project.alignment === "center" || project.alignment === "right") {
-            alignment = project.alignment;
-          } else {
-            // Default alignment based on index if invalid
-            alignment = index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right";
-          }
-          
-          return {
-            ...project,
-            year: project.date || project.year || new Date().getFullYear().toString(),
-            size,
-            alignment
-          };
-        });
-        setProjects(formattedProjects);
+      try {
+        const adminProjects = JSON.parse(savedPortfolio);
+        // Check if we have at least one valid project
+        if (adminProjects && adminProjects.length > 0) {
+          // Map admin projects to our format with proper type checking for size and alignment
+          const formattedProjects: Project[] = adminProjects.map((project: any, index: number) => {
+            // Ensure size is one of the valid options
+            let size: "large" | "medium" | "small";
+            if (project.size === "large" || project.size === "medium" || project.size === "small") {
+              size = project.size;
+            } else {
+              // Default size based on index if invalid
+              size = index % 3 === 0 ? "large" : index % 3 === 1 ? "medium" : "small";
+            }
+            
+            // Ensure alignment is one of the valid options
+            let alignment: "left" | "center" | "right";
+            if (project.alignment === "left" || project.alignment === "center" || project.alignment === "right") {
+              alignment = project.alignment;
+            } else {
+              // Default alignment based on index if invalid
+              alignment = index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right";
+            }
+            
+            return {
+              ...project,
+              year: project.date || project.year || new Date().getFullYear().toString(),
+              size,
+              alignment,
+              additionalImages: project.additionalImages || []
+            };
+          });
+          setProjects(formattedProjects);
+        }
+      } catch (error) {
+        console.error("Error parsing portfolio data:", error);
+        // Fallback to default projects if parsing fails
+        setProjects(defaultProjects);
       }
     }
 
