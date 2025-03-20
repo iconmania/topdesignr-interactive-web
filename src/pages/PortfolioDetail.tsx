@@ -17,14 +17,25 @@ export default function PortfolioDetail() {
 
   useEffect(() => {
     // Get project from localStorage
-    const savedProjects = localStorage.getItem("portfolioProjects");
+    const savedProjects = localStorage.getItem("adminPortfolio");
     if (savedProjects && id) {
       const projects = JSON.parse(savedProjects);
       const projectId = parseInt(id);
       const foundProject = projects.find((p: any) => p.id === projectId);
       
       if (foundProject) {
+        // If we have a match from admin dashboard data
         setProject(foundProject);
+      } else {
+        // Try to get from portfolioProjects (frontend data)
+        const frontendProjects = localStorage.getItem("portfolioProjects");
+        if (frontendProjects) {
+          const projects = JSON.parse(frontendProjects);
+          const foundProject = projects.find((p: any) => p.id === projectId);
+          if (foundProject) {
+            setProject(foundProject);
+          }
+        }
       }
     }
     
@@ -114,7 +125,7 @@ export default function PortfolioDetail() {
                 {project.category}
               </span>
               <span className="bg-background/30 backdrop-blur-md text-white text-sm px-4 py-1 rounded-full">
-                {project.year}
+                {project.date || project.year}
               </span>
             </div>
             
@@ -170,14 +181,14 @@ export default function PortfolioDetail() {
               </div>
             )}
             
-            {project.year && (
+            {(project.date || project.year) && (
               <div className="flex items-start">
                 <div className="mr-4 p-3 bg-primary/10 rounded-lg">
                   <Calendar className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold mb-1">Year</h3>
-                  <p>{project.year}</p>
+                  <p>{project.date || project.year}</p>
                 </div>
               </div>
             )}
@@ -213,12 +224,12 @@ export default function PortfolioDetail() {
           </div>
         )}
 
-        {/* Gallery Section */}
+        {/* Gallery Section - Slider */}
         {allImages.length > 0 && (
           <div>
             <h2 className="text-3xl font-bold mb-12 text-center">Project Gallery</h2>
             
-            <div className="relative overflow-hidden rounded-xl aspect-video">
+            <div className="relative overflow-hidden rounded-xl aspect-video mb-12">
               {allImages.map((image, index) => (
                 <div 
                   key={index}
@@ -268,6 +279,22 @@ export default function PortfolioDetail() {
                   </div>
                 </>
               )}
+            </div>
+            
+            {/* Gallery Section - Full Images Stacked */}
+            <div className="space-y-12">
+              {project.additionalImages && project.additionalImages.map((image: string, index: number) => (
+                <div 
+                  key={index} 
+                  className="overflow-hidden rounded-xl"
+                >
+                  <img 
+                    src={image} 
+                    alt={`${project.title} - detail ${index + 1}`} 
+                    className="w-full object-cover"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         )}

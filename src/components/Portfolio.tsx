@@ -9,12 +9,17 @@ type Project = {
   title: string;
   category: string;
   image: string;
-  year: string;
-  size: "large" | "medium" | "small";
+  description?: string;
+  client?: string;
+  date?: string;
+  link?: string;
+  year?: string;
+  size?: "large" | "medium" | "small";
   alignment?: "left" | "center" | "right";
 };
 
-const projects: Project[] = [{
+// Default projects if no admin data exists
+const defaultProjects = [{
   id: 1,
   title: "Quantum Brand Redesign",
   category: "Branding",
@@ -185,8 +190,27 @@ const ProjectCard = ({
 export default function Portfolio() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [projects, setProjects] = useState<Project[]>(defaultProjects);
 
   useEffect(() => {
+    // Load portfolio items from localStorage
+    const savedPortfolio = localStorage.getItem("adminPortfolio");
+    if (savedPortfolio) {
+      const adminProjects = JSON.parse(savedPortfolio);
+      // Check if we have at least one valid project
+      if (adminProjects && adminProjects.length > 0) {
+        // Map admin projects to our format with default size/alignment if not present
+        const formattedProjects = adminProjects.map((project: any, index: number) => ({
+          ...project,
+          year: project.date || project.year || new Date().getFullYear().toString(),
+          size: project.size || (index % 3 === 0 ? "large" : index % 3 === 1 ? "medium" : "small"),
+          alignment: project.alignment || (index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right")
+        }));
+        setProjects(formattedProjects);
+      }
+    }
+
+    // Intersection Observer setup
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsVisible(true);
@@ -195,15 +219,20 @@ export default function Portfolio() {
     }, {
       threshold: 0.1
     });
-
+    
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
-
+    
     return () => {
       observer.disconnect();
     };
   }, []);
+
+  // Save projects to localStorage so they're available for PortfolioDetail page
+  useEffect(() => {
+    localStorage.setItem("portfolioProjects", JSON.stringify(projects));
+  }, [projects]);
 
   return (
     <section id="work" ref={sectionRef} className="py-24">

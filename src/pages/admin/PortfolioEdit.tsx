@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Save, ArrowLeft, Upload, X } from "lucide-react";
+import { Save, ArrowLeft, Upload, X, Plus, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -29,6 +29,7 @@ const formSchema = z.object({
   client: z.string().optional(),
   date: z.string().optional(),
   link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  additionalImages: z.array(z.string()).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -40,6 +41,8 @@ export default function PortfolioEdit() {
   const [isNewItem, setIsNewItem] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [additionalImages, setAdditionalImages] = useState<string[]>([]);
+  const [additionalImagePreviews, setAdditionalImagePreviews] = useState<string[]>([]);
 
   // Initialize form with default values
   const form = useForm<FormValues>({
@@ -51,7 +54,8 @@ export default function PortfolioEdit() {
       image: "",
       client: "",
       date: "",
-      link: ""
+      link: "",
+      additionalImages: []
     }
   });
 
@@ -82,11 +86,17 @@ export default function PortfolioEdit() {
         image: portfolioItem.image || "",
         client: portfolioItem.client || "",
         date: portfolioItem.date || "",
-        link: portfolioItem.link || ""
+        link: portfolioItem.link || "",
+        additionalImages: portfolioItem.additionalImages || []
       });
       
       if (portfolioItem.image) {
         setImagePreview(portfolioItem.image);
+      }
+      
+      if (portfolioItem.additionalImages && portfolioItem.additionalImages.length > 0) {
+        setAdditionalImages(portfolioItem.additionalImages);
+        setAdditionalImagePreviews(portfolioItem.additionalImages);
       }
     } else {
       // New item
@@ -125,7 +135,57 @@ export default function PortfolioEdit() {
     }
   };
 
+  const handleAdditionalImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Image size should be less than 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      const newAdditionalImages = [...additionalImages, base64String];
+      const newAdditionalImagePreviews = [...additionalImagePreviews, base64String];
+      
+      setAdditionalImages(newAdditionalImages);
+      setAdditionalImagePreviews(newAdditionalImagePreviews);
+      form.setValue("additionalImages", newAdditionalImages);
+      
+      // Clear the input for next upload
+      if (event.target) {
+        event.target.value = "";
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAdditionalImage = (index: number) => {
+    const newAdditionalImages = [...additionalImages];
+    const newAdditionalImagePreviews = [...additionalImagePreviews];
+    
+    newAdditionalImages.splice(index, 1);
+    newAdditionalImagePreviews.splice(index, 1);
+    
+    setAdditionalImages(newAdditionalImages);
+    setAdditionalImagePreviews(newAdditionalImagePreviews);
+    form.setValue("additionalImages", newAdditionalImages);
+  };
+
   const onSubmit = (values: FormValues) => {
+    // Prepare data with additional images
+    const finalValues = {
+      ...values,
+      additionalImages: additionalImages
+    };
+
     // Save to localStorage
     const savedPortfolio = localStorage.getItem("adminPortfolio");
     const portfolioItems = savedPortfolio ? JSON.parse(savedPortfolio) : [];
@@ -135,7 +195,7 @@ export default function PortfolioEdit() {
       // Add new item
       const newItem = {
         id: itemId,
-        ...values
+        ...finalValues
       };
       portfolioItems.push(newItem);
     } else {
@@ -144,13 +204,13 @@ export default function PortfolioEdit() {
       if (index !== -1) {
         portfolioItems[index] = {
           ...portfolioItems[index],
-          ...values
+          ...finalValues
         };
       } else {
         // Item not found, add as new
         const newItem = {
           id: itemId,
-          ...values
+          ...finalValues
         };
         portfolioItems.push(newItem);
       }
@@ -228,7 +288,7 @@ export default function PortfolioEdit() {
                     name="image"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Image</FormLabel>
+                        <FormLabel>Cover Image</FormLabel>
                         <FormControl>
                           <div className="space-y-4">
                             <div className="flex items-center gap-4">
@@ -276,7 +336,7 @@ export default function PortfolioEdit() {
                           </div>
                         </FormControl>
                         <FormDescription>
-                          Upload an image or enter a URL for the portfolio item
+                          Upload an image or enter a URL for the portfolio item cover
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -347,6 +407,61 @@ export default function PortfolioEdit() {
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <div className="mt-8">
+                <div className="flex justify-between items-center mb-4">
+                  <FormLabel className="text-base">Additional Project Images</FormLabel>
+                  <div>
+                    <input 
+                      type="file"
+                      id="additionalImageUpload"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAdditionalImageUpload}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('additionalImageUpload')?.click()}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Add Image
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {additionalImagePreviews.map((image, index) => (
+                    <div key={index} className="relative border rounded-md overflow-hidden">
+                      <img 
+                        src={image} 
+                        alt={`Additional image ${index + 1}`} 
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-2 right-2 flex space-x-2">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleRemoveAdditionalImage(index)}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {additionalImagePreviews.length === 0 && (
+                    <div className="border border-dashed rounded-md p-6 flex flex-col items-center justify-center text-muted-foreground">
+                      <Upload className="h-10 w-10 mb-2" />
+                      <p>No additional images added</p>
+                      <p className="text-sm">Click "Add Image" to upload project gallery images</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -50,6 +50,27 @@ const Index = () => {
       observer.observe(section);
     });
     
+    // Create or update portfolioProjects and adminPortfolio if needed
+    const ensureDataConsistency = () => {
+      // For portfolio
+      const adminPortfolio = localStorage.getItem("adminPortfolio");
+      if (!adminPortfolio || JSON.parse(adminPortfolio).length === 0) {
+        // If we have frontend portfolio data, use it to initialize admin data
+        const portfolioProjects = localStorage.getItem("portfolioProjects");
+        if (portfolioProjects) {
+          localStorage.setItem("adminPortfolio", portfolioProjects);
+        }
+      }
+      
+      // For services
+      // Similar logic could be added here if needed
+      
+      // For testimonials
+      // Similar logic could be added here if needed
+    };
+    
+    ensureDataConsistency();
+    
     return () => {
       document.body.classList.remove('use-custom-cursor');
       document.documentElement.style.overflowX = '';
