@@ -1,40 +1,88 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ExternalLink, Clock, Building, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Clock, Building, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
+// Simple Footer component
+const ProjectFooter = () => {
+  return (
+    <footer className="border-t border-border/20 mt-32 pt-8 pb-8">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <p className="text-muted-foreground text-sm mb-4 md:mb-0">
+            © 2025 TopDesignr. All rights reserved.
+          </p>
+          <div className="flex space-x-6">
+            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Terms
+            </Link>
+            <Link to="/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Cookie Policy
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
 export default function PortfolioDetail() {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<any>(null);
+  const [nextProject, setNextProject] = useState<any>(null);
+  const [prevProject, setPrevProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isTextVisible, setIsTextVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const { normalizedX, normalizedY } = useMousePosition();
+  const [allProjects, setAllProjects] = useState<any[]>([]);
 
   useEffect(() => {
-    // Get project from localStorage
-    const savedProjects = localStorage.getItem("adminPortfolio");
-    if (savedProjects && id) {
-      const projects = JSON.parse(savedProjects);
-      const projectId = parseInt(id);
-      const foundProject = projects.find((p: any) => p.id === projectId);
+    // Get all projects first
+    const fetchAllProjects = () => {
+      const savedProjects = localStorage.getItem("adminPortfolio");
+      if (savedProjects) {
+        return JSON.parse(savedProjects);
+      }
       
-      if (foundProject) {
-        // If we have a match from admin dashboard data
-        setProject(foundProject);
-      } else {
-        // Try to get from portfolioProjects (frontend data)
-        const frontendProjects = localStorage.getItem("portfolioProjects");
-        if (frontendProjects) {
-          const projects = JSON.parse(frontendProjects);
-          const foundProject = projects.find((p: any) => p.id === projectId);
-          if (foundProject) {
-            setProject(foundProject);
-          }
+      // Try to get from portfolioProjects (frontend data)
+      const frontendProjects = localStorage.getItem("portfolioProjects");
+      if (frontendProjects) {
+        return JSON.parse(frontendProjects);
+      }
+      
+      return [];
+    };
+    
+    const projects = fetchAllProjects();
+    setAllProjects(projects);
+    
+    if (projects.length > 0 && id) {
+      const projectId = parseInt(id);
+      const currentIndex = projects.findIndex((p: any) => p.id === projectId);
+      
+      if (currentIndex !== -1) {
+        // Set current project
+        setProject(projects[currentIndex]);
+        
+        // Set next project
+        if (currentIndex < projects.length - 1) {
+          setNextProject(projects[currentIndex + 1]);
+        } else {
+          setNextProject(projects[0]); // Wrap around to first project
+        }
+        
+        // Set previous project
+        if (currentIndex > 0) {
+          setPrevProject(projects[currentIndex - 1]);
+        } else {
+          setPrevProject(projects[projects.length - 1]); // Wrap around to last project
         }
       }
     }
@@ -67,20 +115,8 @@ export default function PortfolioDetail() {
     );
   }
 
-  const nextImage = () => {
-    const totalImages = 1 + (project.additionalImages?.length || 0);
-    setActiveImageIndex((prev) => (prev + 1) % totalImages);
-  };
-
-  const prevImage = () => {
-    const totalImages = 1 + (project.additionalImages?.length || 0);
-    setActiveImageIndex((prev) => (prev - 1 + totalImages) % totalImages);
-  };
-
-  const allImages = [project.image, ...(project.additionalImages || [])].filter(Boolean);
-
   return (
-    <div ref={sectionRef} className="min-h-screen pb-24">
+    <div ref={sectionRef} className="min-h-screen">
       {/* Hero Section */}
       <div className="relative h-screen overflow-hidden">
         <div 
@@ -142,12 +178,23 @@ export default function PortfolioDetail() {
                 isTextVisible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
               }`}
             >
-              <MagneticButton asChild strength={20}>
-                <Link to="/" className="group">
-                  <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                  Back to Portfolio
-                </Link>
-              </MagneticButton>
+              <div className="flex flex-wrap gap-4">
+                <MagneticButton asChild strength={20}>
+                  <Link to="/" className="group">
+                    <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                    Back to Portfolio
+                  </Link>
+                </MagneticButton>
+
+                {project.url && (
+                  <MagneticButton asChild variant="secondary" strength={20}>
+                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="group">
+                      Visit Project
+                      <ExternalLink className="ml-2 h-4 w-4 transition-transform group-hover:translate-y-[-2px] group-hover:translate-x-[2px]" />
+                    </a>
+                  </MagneticButton>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -192,6 +239,25 @@ export default function PortfolioDetail() {
                 </div>
               </div>
             )}
+            
+            {project.url && (
+              <div className="flex items-start">
+                <div className="mr-4 p-3 bg-primary/10 rounded-lg">
+                  <ExternalLink className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-1">Project URL</h3>
+                  <a 
+                    href={project.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline truncate inline-block max-w-[200px]"
+                  >
+                    {project.url}
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -224,66 +290,14 @@ export default function PortfolioDetail() {
           </div>
         )}
 
-        {/* Gallery Section - Slider */}
-        {allImages.length > 0 && (
+        {/* Gallery Section - Full Images Stacked */}
+        {project.additionalImages && project.additionalImages.length > 0 && (
           <div>
             <h2 className="text-3xl font-bold mb-12 text-center">Project Gallery</h2>
             
-            <div className="relative overflow-hidden rounded-xl aspect-video mb-12">
-              {allImages.map((image, index) => (
-                <div 
-                  key={index}
-                  className={`absolute inset-0 transition-opacity duration-500 ${
-                    activeImageIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
-                  }`}
-                >
-                  <img 
-                    src={image} 
-                    alt={`${project.title} - image ${index + 1}`} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-              
-              {allImages.length > 1 && (
-                <>
-                  <button 
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 transition-colors text-white rounded-full p-3 z-10"
-                    aria-label="Previous image"
-                  >
-                    <ArrowLeft className="h-6 w-6" />
-                  </button>
-                  
-                  <button 
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 transition-colors text-white rounded-full p-3 z-10"
-                    aria-label="Next image"
-                  >
-                    <ArrowRight className="h-6 w-6" />
-                  </button>
-                  
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
-                    {allImages.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setActiveImageIndex(index)}
-                        className={`w-3 h-3 rounded-full transition-all ${
-                          activeImageIndex === index 
-                            ? "bg-white w-6" 
-                            : "bg-white/50 hover:bg-white/80"
-                        }`}
-                        aria-label={`Go to image ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-            
-            {/* Gallery Section - Full Images Stacked */}
+            {/* Display additional images stacked */}
             <div className="space-y-12">
-              {project.additionalImages && project.additionalImages.map((image: string, index: number) => (
+              {project.additionalImages.map((image: string, index: number) => (
                 <div 
                   key={index} 
                   className="overflow-hidden rounded-xl"
@@ -312,18 +326,49 @@ export default function PortfolioDetail() {
           </div>
         )}
 
-        {/* Next Project Navigation */}
-        <div className="flex justify-center">
-          <div className="flex space-x-4">
-            <MagneticButton asChild strength={20}>
-              <Link to="/" className="group">
-                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-                Back to Portfolio
+        {/* Next/Previous Project Navigation */}
+        <div className="mt-24 border-t border-border/20 pt-12">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            {prevProject && (
+              <Link 
+                to={`/portfolio/${prevProject.id}`} 
+                className="flex items-center group mb-6 md:mb-0 hover:text-primary transition-colors"
+              >
+                <ChevronLeft className="mr-2 h-5 w-5 transform group-hover:-translate-x-1 transition-transform" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Previous Project</p>
+                  <h4 className="font-medium">{prevProject.title}</h4>
+                </div>
+              </Link>
+            )}
+
+            <MagneticButton asChild strength={20} className="my-6 md:my-0">
+              <Link to="/">
+                <div className="flex items-center">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Portfolio
+                </div>
               </Link>
             </MagneticButton>
+
+            {nextProject && (
+              <Link 
+                to={`/portfolio/${nextProject.id}`} 
+                className="flex items-center group text-right hover:text-primary transition-colors"
+              >
+                <div>
+                  <p className="text-sm text-muted-foreground">Next Project</p>
+                  <h4 className="font-medium">{nextProject.title}</h4>
+                </div>
+                <ChevronRight className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
+              </Link>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <ProjectFooter />
     </div>
   );
 }

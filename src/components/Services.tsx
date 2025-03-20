@@ -1,5 +1,6 @@
+
 import { useRef, useState, useEffect } from "react";
-import { ArrowRight, ArrowLeft, Palette, LineChart, LayoutGrid, Globe, Layers } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,40 +10,56 @@ type Service = {
   id: number;
   title: string;
   description: string;
-  icon: JSX.Element;
+  image?: string;
+  icon?: JSX.Element;
+  price?: string;
 };
 
-const services: Service[] = [{
-  id: 1,
-  title: "Strategy & Branding",
-  description: "We develop comprehensive brand strategies that align with your business goals and resonate with your target audience.",
-  icon: <LineChart className="h-10 w-10" />
-}, {
-  id: 2,
-  title: "UI/UX Design",
-  description: "Our user-centered approach creates intuitive interfaces and meaningful experiences that drive engagement and satisfaction.",
-  icon: <Palette className="h-10 w-10" />
-}, {
-  id: 3,
-  title: "Web Development",
-  description: "We build high-performance, responsive websites with clean code and cutting-edge technologies for optimal user experience.",
-  icon: <Globe className="h-10 w-10" />
-}, {
-  id: 4,
-  title: "App Development",
-  description: "From concept to launch, we create native and cross-platform mobile applications that engage users and deliver results.",
-  icon: <Layers className="h-10 w-10" />
-}, {
-  id: 5,
-  title: "Digital Marketing",
-  description: "We implement data-driven marketing strategies that increase visibility, drive traffic, and convert visitors into customers.",
-  icon: <LineChart className="h-10 w-10" />
-}, {
-  id: 6,
-  title: "Interactive Experiences",
-  description: "We design immersive digital experiences that captivate audiences, from AR/VR to interactive installations.",
-  icon: <LayoutGrid className="h-10 w-10" />
-}];
+// Default services if no admin data exists
+const defaultServices: Service[] = [
+  {
+    id: 1,
+    title: "Strategy & Branding",
+    description: "We develop comprehensive brand strategies that align with your business goals and resonate with your target audience.",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    price: "$1,500"
+  },
+  {
+    id: 2,
+    title: "UI/UX Design",
+    description: "Our user-centered approach creates intuitive interfaces and meaningful experiences that drive engagement and satisfaction.",
+    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    price: "$2,000"
+  },
+  {
+    id: 3,
+    title: "Web Development",
+    description: "We build high-performance, responsive websites with clean code and cutting-edge technologies for optimal user experience.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    price: "$3,000"
+  },
+  {
+    id: 4,
+    title: "App Development",
+    description: "From concept to launch, we create native and cross-platform mobile applications that engage users and deliver results.",
+    image: "https://images.unsplash.com/photo-1555421689-491a97ff2040?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    price: "$5,000"
+  },
+  {
+    id: 5,
+    title: "Digital Marketing",
+    description: "We implement data-driven marketing strategies that increase visibility, drive traffic, and convert visitors into customers.",
+    image: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    price: "$1,200"
+  },
+  {
+    id: 6,
+    title: "Interactive Experiences",
+    description: "We design immersive digital experiences that captivate audiences, from AR/VR to interactive installations.",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    price: "$4,500"
+  }
+];
 
 export default function Services() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -56,8 +73,22 @@ export default function Services() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [services, setServices] = useState<Service[]>(defaultServices);
 
   useEffect(() => {
+    // Load services from localStorage (admin dashboard)
+    const savedServices = localStorage.getItem("adminServices");
+    if (savedServices) {
+      try {
+        const adminServices = JSON.parse(savedServices);
+        if (adminServices && adminServices.length > 0) {
+          setServices(adminServices);
+        }
+      } catch (error) {
+        console.error("Error parsing services data:", error);
+      }
+    }
+
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsVisible(true);
@@ -254,7 +285,7 @@ export default function Services() {
             {services.map(service => (
               <Card 
                 key={service.id} 
-                className={`flex-shrink-0 w-[85%] md:w-[400px] h-[380px] rounded-xl p-1 relative transition-all duration-500 
+                className={`flex-shrink-0 w-[85%] md:w-[400px] h-[450px] rounded-xl p-1 relative transition-all duration-500 
                   ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"} 
                   ${hoverService === service.id ? 'scale-[1.05] z-20' : 'scale-100 z-0'}
                   hover:shadow-xl`}
@@ -271,16 +302,20 @@ export default function Services() {
                     hsl(var(--background-hsl, var(--background)) / 1) 100%)
                   `,
                   transition: 'all 0.4s cubic-bezier(0.33, 1, 0.68, 1)',
+                  overflow: 'hidden'
                 }}
               >
-                <CardContent className="p-8 md:p-10 h-full flex flex-col justify-between">
+                {/* Service image at the top */}
+                <div className="w-full h-40 overflow-hidden rounded-t-xl">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  />
+                </div>
+                
+                <CardContent className="p-8 h-[calc(100%-10rem)] flex flex-col justify-between">
                   <div>
-                    <div 
-                      className="mb-6 w-16 h-16 flex items-center justify-center text-primary rounded-full bg-primary/10"
-                    >
-                      {service.icon}
-                    </div>
-                    
                     <h3 
                       className="text-2xl md:text-3xl font-bold mb-4"
                     >
@@ -294,21 +329,28 @@ export default function Services() {
                     </p>
                   </div>
                   
-                  <MagneticButton 
-                    asChild
-                    variant="link" 
-                    className="inline-flex items-center text-primary p-0 group w-auto h-auto"
-                    strength={20}
-                  >
-                    <Link 
-                      to={`/services/${service.id}`}
-                      className="font-medium inline-flex items-center hover:no-underline hover:text-primary/80 transition-colors"
-                      style={{ boxShadow: 'none' }}
+                  <div className="space-y-4">
+                    {service.price && (
+                      <p className="font-semibold text-sm text-primary/90">
+                        Starting from <span className="text-lg">{service.price}</span>
+                      </p>
+                    )}
+                    
+                    <MagneticButton 
+                      asChild
+                      variant="default" 
+                      className="w-full justify-center group"
+                      strength={20}
                     >
-                      <span>Learn more</span>
-                      <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Link>
-                  </MagneticButton>
+                      <Link 
+                        to={`/services/${service.id}`}
+                        className="font-medium inline-flex items-center"
+                      >
+                        <span>Learn more</span>
+                        <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+                      </Link>
+                    </MagneticButton>
+                  </div>
                 </CardContent>
               </Card>
             ))}

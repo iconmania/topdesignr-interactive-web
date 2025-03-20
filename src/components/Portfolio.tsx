@@ -17,6 +17,7 @@ type Project = {
   size: "large" | "medium" | "small";
   alignment: "left" | "center" | "right";
   additionalImages?: string[];
+  url?: string;
 };
 
 // Default projects if no admin data exists
@@ -108,14 +109,15 @@ const ProjectCard = ({
     };
   }, [index]);
 
+  // Updated size classes to make images larger and fill viewport better
   const getSizeClasses = () => {
     switch (project.size) {
       case "large":
-        return "col-span-12 md:col-span-12 h-[80vh] md:h-screen";
+        return "col-span-12 md:col-span-12 lg:col-span-8 h-[70vh] md:h-[85vh]";
       case "medium":
-        return "col-span-12 md:col-span-8 h-[60vh] md:h-[90vh]";
+        return "col-span-12 md:col-span-6 lg:col-span-6 h-[60vh] md:h-[75vh]";
       case "small":
-        return "col-span-12 md:col-span-4 h-[50vh] md:h-[70vh]";
+        return "col-span-12 md:col-span-6 lg:col-span-4 h-[50vh] md:h-[65vh]";
       default:
         return "col-span-12 md:col-span-6 h-[60vh] md:h-[80vh]";
     }

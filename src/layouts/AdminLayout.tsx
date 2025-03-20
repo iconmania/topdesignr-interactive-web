@@ -36,6 +36,10 @@ export default function AdminLayout() {
     navigate("/admin/login");
   };
 
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
     { icon: MessageSquare, label: "Messages", path: "/admin/messages" },
@@ -119,7 +123,8 @@ export default function AdminLayout() {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={toggleTheme}
+                title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
               >
                 {theme === "dark" ? (
                   <Sun className="h-4 w-4" />
