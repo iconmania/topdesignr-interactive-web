@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Save, ArrowLeft } from "lucide-react";
+import { Save, ArrowLeft, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,7 +25,7 @@ const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   category: z.string().min(1, "Category is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  image: z.string().url("Image must be a valid URL"),
+  image: z.string().optional(),
   client: z.string().optional(),
   date: z.string().optional(),
   link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
@@ -37,6 +38,8 @@ export default function PortfolioEdit() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isNewItem, setIsNewItem] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize form with default values
   const form = useForm<FormValues>({
@@ -81,11 +84,46 @@ export default function PortfolioEdit() {
         date: portfolioItem.date || "",
         link: portfolioItem.link || ""
       });
+      
+      if (portfolioItem.image) {
+        setImagePreview(portfolioItem.image);
+      }
     } else {
       // New item
       setIsNewItem(true);
     }
   }, [id, form]);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Image size should be less than 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setImagePreview(base64String);
+      form.setValue("image", base64String);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    form.setValue("image", "");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const onSubmit = (values: FormValues) => {
     // Save to localStorage
@@ -190,12 +228,55 @@ export default function PortfolioEdit() {
                     name="image"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Image URL</FormLabel>
+                        <FormLabel>Project Image</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://example.com/image.jpg" {...field} />
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="flex items-center gap-2"
+                              >
+                                <Upload className="h-4 w-4" />
+                                Upload Image
+                              </Button>
+                              <Input
+                                placeholder="Or enter image URL..."
+                                value={field.value}
+                                onChange={field.onChange}
+                                className="max-w-xs"
+                              />
+                            </div>
+                            <input 
+                              type="file"
+                              ref={fileInputRef}
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleImageUpload}
+                            />
+                            {imagePreview && (
+                              <div className="relative w-full max-w-xs">
+                                <img 
+                                  src={imagePreview} 
+                                  alt="Preview" 
+                                  className="rounded-md h-40 w-full object-cover border"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="destructive"
+                                  size="icon"
+                                  className="absolute top-2 right-2 h-8 w-8"
+                                  onClick={handleRemoveImage}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
                         </FormControl>
                         <FormDescription>
-                          Enter a valid URL for the portfolio image
+                          Upload an image or enter a URL for the portfolio item
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

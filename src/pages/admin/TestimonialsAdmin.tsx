@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Pencil, Trash, Save, X } from "lucide-react";
+import { Plus, Pencil, Trash, Save, X, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Testimonial {
@@ -31,6 +31,8 @@ export default function TestimonialsAdmin() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState<Testimonial>({
     id: 0,
@@ -57,6 +59,43 @@ export default function TestimonialsAdmin() {
     }));
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (limit to 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Image size should be less than 2MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setImagePreview(base64String);
+      setFormData(prev => ({
+        ...prev,
+        image: base64String
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setFormData(prev => ({
+      ...prev,
+      image: ""
+    }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       id: Date.now(),
@@ -66,8 +105,12 @@ export default function TestimonialsAdmin() {
       company: "",
       image: ""
     });
+    setImagePreview(null);
     setIsEditing(false);
     setEditingId(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleAddNew = () => {
@@ -79,6 +122,9 @@ export default function TestimonialsAdmin() {
     setFormData(testimonial);
     setEditingId(testimonial.id);
     setIsEditing(true);
+    if (testimonial.image) {
+      setImagePreview(testimonial.image);
+    }
   };
 
   const handleDelete = (id: number) => {
@@ -210,14 +256,55 @@ export default function TestimonialsAdmin() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="image" className="text-sm font-medium">Image URL</label>
-                  <Input 
-                    id="image"
-                    name="image"
-                    value={formData.image}
-                    onChange={handleInputChange}
-                    placeholder="Enter the image URL..."
-                  />
+                  <label className="text-sm font-medium">Author Image</label>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="flex items-center gap-2"
+                      >
+                        <Upload className="h-4 w-4" />
+                        Upload Image
+                      </Button>
+                      <Input 
+                        id="image"
+                        name="image"
+                        value={formData.image}
+                        onChange={handleInputChange}
+                        placeholder="Or enter image URL..."
+                      />
+                      <input 
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageUpload}
+                      />
+                    </div>
+                    
+                    {imagePreview && (
+                      <div className="relative inline-block">
+                        <div className="w-16 h-16 rounded-full overflow-hidden border">
+                          <img 
+                            src={imagePreview} 
+                            alt="Author" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute -top-2 -right-2 h-6 w-6"
+                          onClick={handleRemoveImage}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               
