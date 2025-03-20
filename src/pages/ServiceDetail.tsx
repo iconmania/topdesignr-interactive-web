@@ -10,9 +10,10 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
 export default function ServiceDetail() {
   const { id } = useParams<{ id: string }>();
   const [service, setService] = useState<any>(null);
+  const [nextService, setNextService] = useState<any>(null);
+  const [prevService, setPrevService] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isTextVisible, setIsTextVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
   const sectionRef = useRef<HTMLDivElement>(null);
   const { normalizedX, normalizedY } = useMousePosition();
 
@@ -26,6 +27,11 @@ export default function ServiceDetail() {
       
       if (foundService) {
         setService(foundService);
+        
+        // Find next and previous services
+        const currentIndex = services.findIndex((s: any) => s.id === serviceId);
+        setPrevService(currentIndex > 0 ? services[currentIndex - 1] : null);
+        setNextService(currentIndex < services.length - 1 ? services[currentIndex + 1] : null);
       }
     }
     
@@ -35,6 +41,9 @@ export default function ServiceDetail() {
     setTimeout(() => {
       setIsTextVisible(true);
     }, 300);
+    
+    // Scroll to top when component mounts or ID changes
+    window.scrollTo(0, 0);
   }, [id]);
 
   if (loading) {
@@ -116,16 +125,26 @@ export default function ServiceDetail() {
   };
 
   return (
-    <div ref={sectionRef} className="min-h-screen pb-24">
+    <div ref={sectionRef} className="min-h-screen pb-0">
       {/* Hero Section */}
       <div className="relative h-[70vh] overflow-hidden bg-gradient-to-br from-primary/5 via-background to-background">
-        <div className="absolute inset-0 pointer-events-none opacity-30">
-          <div className="absolute -right-10 opacity-10 overflow-hidden">
-            <div className="text-[40vw] font-black tracking-tighter text-primary/10">
-              {service.title.substring(0, 1)}
+        {service.coverImage ? (
+          <div className="absolute inset-0 opacity-20">
+            <img 
+              src={service.coverImage} 
+              alt={service.title} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ) : (
+          <div className="absolute inset-0 pointer-events-none opacity-30">
+            <div className="absolute -right-10 opacity-10 overflow-hidden">
+              <div className="text-[40vw] font-black tracking-tighter text-primary/10">
+                {service.title.substring(0, 1)}
+              </div>
             </div>
           </div>
-        </div>
+        )}
         
         <div 
           className="container mx-auto px-6 h-full flex flex-col justify-center"
@@ -175,112 +194,50 @@ export default function ServiceDetail() {
         </div>
       </div>
 
-      {/* Service Tabs */}
-      <div className="container mx-auto px-6 py-12">
-        <div className="flex flex-wrap justify-center mb-12 border-b">
-          <button
-            className={`px-6 py-4 text-lg font-medium transition-colors ${
-              activeTab === "overview" 
-                ? "border-b-2 border-primary text-primary" 
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-            onClick={() => setActiveTab("overview")}
-          >
-            Overview
-          </button>
-          <button
-            className={`px-6 py-4 text-lg font-medium transition-colors ${
-              activeTab === "process" 
-                ? "border-b-2 border-primary text-primary" 
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-            onClick={() => setActiveTab("process")}
-          >
-            Process
-          </button>
-          <button
-            className={`px-6 py-4 text-lg font-medium transition-colors ${
-              activeTab === "pricing" 
-                ? "border-b-2 border-primary text-primary" 
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-            onClick={() => setActiveTab("pricing")}
-          >
-            Pricing
-          </button>
-          <button
-            className={`px-6 py-4 text-lg font-medium transition-colors ${
-              activeTab === "faq" 
-                ? "border-b-2 border-primary text-primary" 
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-            onClick={() => setActiveTab("faq")}
-          >
-            FAQ
-          </button>
-        </div>
-
-        {/* Overview Tab */}
-        {activeTab === "overview" && (
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-              <div>
-                <h2 className="text-3xl font-bold mb-8 tracking-tight">About this Service</h2>
-                <div className="prose prose-lg max-w-none dark:prose-invert">
-                  <p>{service.fullDescription}</p>
-                </div>
-                
-                {service.caseStudies && service.caseStudies.length > 0 && (
-                  <div className="mt-12">
-                    <h3 className="text-2xl font-bold mb-6">Case Studies</h3>
-                    <div className="space-y-6">
-                      {service.caseStudies.map((caseStudy: any, index: number) => (
-                        <Card key={index}>
-                          <CardContent className="p-6">
-                            <h4 className="text-xl font-bold mb-2">{caseStudy.title}</h4>
-                            <p className="text-sm text-muted-foreground mb-4">Client: {caseStudy.client}</p>
-                            <p>{caseStudy.description}</p>
-                          </CardContent>
-                        </Card>
-                      ))}
+      {/* Content Sections (Vertical Layout) */}
+      <div className="container mx-auto px-6 py-24">
+        {/* Overview Section */}
+        <div className="max-w-6xl mx-auto mb-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div>
+              <h2 className="text-3xl font-bold mb-8 tracking-tight">About this Service</h2>
+              <div className="prose prose-lg max-w-none dark:prose-invert">
+                <p>{service.fullDescription}</p>
+              </div>
+            </div>
+            
+            <div>
+              <h2 className="text-3xl font-bold mb-8 tracking-tight">Benefits</h2>
+              <div className="space-y-4">
+                {service.benefits?.map((benefit: string, index: number) => (
+                  <div key={index} className="flex items-start">
+                    <div className="mr-4 mt-1 bg-primary/10 rounded-full p-1">
+                      <Check className="h-5 w-5 text-primary" />
                     </div>
+                    <p className="text-lg">{benefit}</p>
                   </div>
-                )}
+                ))}
               </div>
               
-              <div>
-                <h2 className="text-3xl font-bold mb-8 tracking-tight">Benefits</h2>
-                <div className="space-y-4">
-                  {service.benefits?.map((benefit: string, index: number) => (
-                    <div key={index} className="flex items-start">
-                      <div className="mr-4 mt-1 bg-primary/10 rounded-full p-1">
-                        <Check className="h-5 w-5 text-primary" />
-                      </div>
-                      <p className="text-lg">{benefit}</p>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-12 p-8 bg-card rounded-xl border">
-                  <h3 className="text-2xl font-bold mb-6">Ready to get started?</h3>
-                  <p className="mb-6 text-muted-foreground">
-                    Contact us today to discuss your needs and how we can help you achieve your goals.
-                  </p>
-                  <MagneticButton asChild strength={20}>
-                    <Link to="/#contact">
-                      Contact Us
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </MagneticButton>
-                </div>
+              <div className="mt-12 p-8 bg-card rounded-xl border">
+                <h3 className="text-2xl font-bold mb-6">Ready to get started?</h3>
+                <p className="mb-6 text-muted-foreground">
+                  Contact us today to discuss your needs and how we can help you achieve your goals.
+                </p>
+                <MagneticButton asChild strength={20}>
+                  <Link to="/#contact">
+                    Contact Us
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </MagneticButton>
               </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Process Tab */}
-        {activeTab === "process" && (
-          <div className="max-w-4xl mx-auto">
+        {/* Process Section */}
+        {service.process && service.process.length > 0 && (
+          <div className="max-w-4xl mx-auto mb-32">
             <h2 className="text-3xl font-bold mb-12 tracking-tight text-center">Our Approach</h2>
             
             <div className="relative">
@@ -304,106 +261,130 @@ export default function ServiceDetail() {
           </div>
         )}
 
-        {/* Pricing Tab */}
-        {activeTab === "pricing" && (
-          <div className="max-w-6xl mx-auto">
+        {/* Pricing Section */}
+        {service.pricing && (
+          <div className="max-w-6xl mx-auto mb-32">
             <h2 className="text-3xl font-bold mb-12 tracking-tight text-center">Pricing Plans</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {service.pricing && (
-                <>
-                  {/* Starter Plan */}
-                  {service.pricing.starter && (
-                    <Card className="flex flex-col overflow-hidden border-border hover:border-primary/50 transition-colors">
-                      <div className="bg-muted p-6 text-center">
-                        <h3 className="text-lg font-bold mb-1">{service.pricing.starter.name}</h3>
-                        <div className="text-3xl font-bold mb-1">{service.pricing.starter.price}</div>
-                      </div>
-                      <CardContent className="flex-grow p-6">
-                        <ul className="space-y-4">
-                          {service.pricing.starter.features?.map((feature: string, index: number) => (
-                            <li key={index} className="flex items-start">
-                              <div className="mr-3 mt-1 text-primary">
-                                <Check className="h-4 w-4" />
-                              </div>
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                      <div className="p-6 pt-0 mt-auto">
-                        <MagneticButton asChild className="w-full" strength={20} variant="outline">
-                          <Link to="/#contact">Get Started</Link>
-                        </MagneticButton>
-                      </div>
-                    </Card>
-                  )}
-                  
-                  {/* Professional Plan */}
-                  {service.pricing.professional && (
-                    <Card className="flex flex-col overflow-hidden border-primary relative">
-                      <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-lg">
-                        Popular
-                      </div>
-                      <div className="bg-primary/10 p-6 text-center">
-                        <h3 className="text-lg font-bold mb-1">{service.pricing.professional.name}</h3>
-                        <div className="text-3xl font-bold mb-1">{service.pricing.professional.price}</div>
-                      </div>
-                      <CardContent className="flex-grow p-6">
-                        <ul className="space-y-4">
-                          {service.pricing.professional.features?.map((feature: string, index: number) => (
-                            <li key={index} className="flex items-start">
-                              <div className="mr-3 mt-1 text-primary">
-                                <Check className="h-4 w-4" />
-                              </div>
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                      <div className="p-6 pt-0 mt-auto">
-                        <MagneticButton asChild className="w-full" strength={20}>
-                          <Link to="/#contact">Get Started</Link>
-                        </MagneticButton>
-                      </div>
-                    </Card>
-                  )}
-                  
-                  {/* Enterprise Plan */}
-                  {service.pricing.enterprise && (
-                    <Card className="flex flex-col overflow-hidden border-border hover:border-primary/50 transition-colors">
-                      <div className="bg-muted p-6 text-center">
-                        <h3 className="text-lg font-bold mb-1">{service.pricing.enterprise.name}</h3>
-                        <div className="text-3xl font-bold mb-1">{service.pricing.enterprise.price}</div>
-                      </div>
-                      <CardContent className="flex-grow p-6">
-                        <ul className="space-y-4">
-                          {service.pricing.enterprise.features?.map((feature: string, index: number) => (
-                            <li key={index} className="flex items-start">
-                              <div className="mr-3 mt-1 text-primary">
-                                <Check className="h-4 w-4" />
-                              </div>
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                      <div className="p-6 pt-0 mt-auto">
-                        <MagneticButton asChild className="w-full" strength={20} variant="outline">
-                          <Link to="/#contact">Contact Us</Link>
-                        </MagneticButton>
-                      </div>
-                    </Card>
-                  )}
-                </>
+              {/* Starter Plan */}
+              {service.pricing.starter && (
+                <Card className="flex flex-col overflow-hidden border-border hover:border-primary/50 transition-colors">
+                  <div className="bg-muted p-6 text-center">
+                    <h3 className="text-lg font-bold mb-1">{service.pricing.starter.name}</h3>
+                    <div className="text-3xl font-bold mb-1">{service.pricing.starter.price}</div>
+                  </div>
+                  <CardContent className="flex-grow p-6">
+                    <ul className="space-y-4">
+                      {service.pricing.starter.features?.map((feature: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <div className="mr-3 mt-1 text-primary">
+                            <Check className="h-4 w-4" />
+                          </div>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <div className="p-6 pt-0 mt-auto">
+                    <MagneticButton asChild className="w-full" strength={20} variant="outline">
+                      <Link to="/#contact">Get Started</Link>
+                    </MagneticButton>
+                  </div>
+                </Card>
+              )}
+              
+              {/* Professional Plan */}
+              {service.pricing.professional && (
+                <Card className="flex flex-col overflow-hidden border-primary relative">
+                  <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-lg">
+                    Popular
+                  </div>
+                  <div className="bg-primary/10 p-6 text-center">
+                    <h3 className="text-lg font-bold mb-1">{service.pricing.professional.name}</h3>
+                    <div className="text-3xl font-bold mb-1">{service.pricing.professional.price}</div>
+                  </div>
+                  <CardContent className="flex-grow p-6">
+                    <ul className="space-y-4">
+                      {service.pricing.professional.features?.map((feature: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <div className="mr-3 mt-1 text-primary">
+                            <Check className="h-4 w-4" />
+                          </div>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <div className="p-6 pt-0 mt-auto">
+                    <MagneticButton asChild className="w-full" strength={20}>
+                      <Link to="/#contact">Get Started</Link>
+                    </MagneticButton>
+                  </div>
+                </Card>
+              )}
+              
+              {/* Enterprise Plan */}
+              {service.pricing.enterprise && (
+                <Card className="flex flex-col overflow-hidden border-border hover:border-primary/50 transition-colors">
+                  <div className="bg-muted p-6 text-center">
+                    <h3 className="text-lg font-bold mb-1">{service.pricing.enterprise.name}</h3>
+                    <div className="text-3xl font-bold mb-1">{service.pricing.enterprise.price}</div>
+                  </div>
+                  <CardContent className="flex-grow p-6">
+                    <ul className="space-y-4">
+                      {service.pricing.enterprise.features?.map((feature: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <div className="mr-3 mt-1 text-primary">
+                            <Check className="h-4 w-4" />
+                          </div>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <div className="p-6 pt-0 mt-auto">
+                    <MagneticButton asChild className="w-full" strength={20} variant="outline">
+                      <Link to="/#contact">Contact Us</Link>
+                    </MagneticButton>
+                  </div>
+                </Card>
               )}
             </div>
           </div>
         )}
 
-        {/* FAQ Tab */}
-        {activeTab === "faq" && (
-          <div className="max-w-4xl mx-auto">
+        {/* Case Studies Section with Images */}
+        {service.caseStudies && service.caseStudies.length > 0 && (
+          <div className="max-w-6xl mx-auto mb-32">
+            <h2 className="text-3xl font-bold mb-12 tracking-tight text-center">Case Studies</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {service.caseStudies.map((caseStudy: any, index: number) => (
+                <Card key={index} className="overflow-hidden">
+                  {caseStudy.image && (
+                    <div className="h-48 overflow-hidden">
+                      <img 
+                        src={caseStudy.image} 
+                        alt={caseStudy.title} 
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                  )}
+                  <CardContent className="p-6">
+                    <h4 className="text-xl font-bold mb-2">{caseStudy.title}</h4>
+                    <p className="text-sm text-muted-foreground mb-4">Client: {caseStudy.client}</p>
+                    <p>{caseStudy.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* FAQ Section */}
+        {service.faq && service.faq.length > 0 && (
+          <div className="max-w-4xl mx-auto mb-32">
             <h2 className="text-3xl font-bold mb-12 tracking-tight text-center">Frequently Asked Questions</h2>
             
             <div className="divide-y">
@@ -413,12 +394,6 @@ export default function ServiceDetail() {
                   <p className="text-muted-foreground">{item.answer}</p>
                 </div>
               ))}
-              
-              {(!service.faq || service.faq.length === 0) && (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">No FAQs available for this service.</p>
-                </div>
-              )}
             </div>
             
             <div className="mt-12 text-center">
@@ -432,7 +407,63 @@ export default function ServiceDetail() {
             </div>
           </div>
         )}
+
+        {/* Next/Previous Project Navigation */}
+        <div className="max-w-6xl mx-auto mb-24 mt-12">
+          <div className="flex flex-col sm:flex-row justify-between items-center border-t border-b py-8">
+            <div>
+              {prevService && (
+                <Link 
+                  to={`/services/${prevService.id}`} 
+                  className="group flex items-center"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                  <div>
+                    <div className="text-sm text-muted-foreground">Previous Service</div>
+                    <div className="font-medium">{prevService.title}</div>
+                  </div>
+                </Link>
+              )}
+            </div>
+            <div className="mt-4 sm:mt-0">
+              {nextService && (
+                <Link 
+                  to={`/services/${nextService.id}`} 
+                  className="group flex items-center text-right"
+                >
+                  <div>
+                    <div className="text-sm text-muted-foreground">Next Service</div>
+                    <div className="font-medium">{nextService.title}</div>
+                  </div>
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-card border-t py-8">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <p className="text-muted-foreground">© 2025 TopDesignr. All rights reserved.</p>
+            </div>
+            <div className="flex space-x-8">
+              <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Privacy Policy
+              </Link>
+              <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Terms of Service
+              </Link>
+              <Link to="/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Cookie Policy
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

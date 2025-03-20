@@ -50,6 +50,48 @@ export function ServiceBasicInfoForm({ form }: ServiceBasicInfoFormProps) {
 
       <FormField
         control={form.control}
+        name="image"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Service Image</FormLabel>
+            <FormControl>
+              <Input 
+                type="text" 
+                placeholder="Enter image URL (e.g. https://images.unsplash.com/...)" 
+                {...field} 
+              />
+            </FormControl>
+            <FormDescription>
+              This image will appear on the service card and detail page
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="coverImage"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Cover Image (Detail Page)</FormLabel>
+            <FormControl>
+              <Input 
+                type="text" 
+                placeholder="Enter cover image URL for detail page" 
+                {...field} 
+              />
+            </FormControl>
+            <FormDescription>
+              This larger image will be used as hero image on the detail page
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
         name="icon"
         render={({ field }) => (
           <FormItem>

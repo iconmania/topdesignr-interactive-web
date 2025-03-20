@@ -1,6 +1,6 @@
 
 import { UseFormReturn, useFieldArray } from "react-hook-form";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -67,6 +67,26 @@ export function ServiceCaseStudiesForm({ form }: ServiceCaseStudiesFormProps) {
 
               <FormField
                 control={form.control}
+                name={`caseStudies.${index}.image`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Enter image URL" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Image for this case study (optional)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name={`caseStudies.${index}.description`}
                 render={({ field }) => (
                   <FormItem>
@@ -85,7 +105,7 @@ export function ServiceCaseStudiesForm({ form }: ServiceCaseStudiesFormProps) {
         <Button
           type="button"
           variant="outline"
-          onClick={() => append({ title: "", client: "", description: "" })}
+          onClick={() => append({ title: "", client: "", description: "", image: "" })}
           className="w-full"
         >
           <Plus className="h-4 w-4 mr-1" />
