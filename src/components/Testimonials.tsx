@@ -126,6 +126,16 @@ export default function Testimonials() {
 
   return (
     <section id="testimonials" ref={sectionRef} className="py-24 relative overflow-hidden" data-cursor="design">      
+      {/* Background Typography */}
+      <div className="absolute right-0 top-0 opacity-5 pointer-events-none overflow-hidden z-0" style={{
+        transform: `translateX(${normalizedX * 20}px) translateY(${normalizedY * 20}px)`,
+        transition: 'transform 0.3s ease-out'
+      }}>
+        <h1 className="text-[30vw] font-black tracking-tighter">
+          CLIENTS
+        </h1>
+      </div>
+      
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none -z-10">
         <div 
