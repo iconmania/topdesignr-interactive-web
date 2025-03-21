@@ -285,7 +285,7 @@ export default function Services() {
             {services.map(service => (
               <Card 
                 key={service.id} 
-                className={`flex-shrink-0 w-[85%] md:w-[400px] h-[450px] rounded-xl p-1 relative transition-all duration-500 
+                className={`flex-shrink-0 w-[85%] md:w-[400px] h-[500px] rounded-xl p-1 relative transition-all duration-500 
                   ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"} 
                   ${hoverService === service.id ? 'scale-[1.05] z-20' : 'scale-100 z-0'}
                   hover:shadow-xl`}
@@ -306,7 +306,7 @@ export default function Services() {
                 }}
               >
                 {/* Service image at the top */}
-                <div className="w-full h-40 overflow-hidden rounded-t-xl">
+                <div className="w-full h-48 overflow-hidden rounded-t-xl">
                   <img 
                     src={service.image} 
                     alt={service.title}
@@ -314,7 +314,7 @@ export default function Services() {
                   />
                 </div>
                 
-                <CardContent className="p-8 h-[calc(100%-10rem)] flex flex-col justify-between">
+                <CardContent className="p-8 h-[calc(100%-12rem)] flex flex-col justify-between">
                   <div>
                     <h3 
                       className="text-2xl md:text-3xl font-bold mb-4"
@@ -329,10 +329,10 @@ export default function Services() {
                     </p>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-4 mt-auto">
                     {service.price && (
-                      <p className="font-semibold text-sm text-primary/90">
-                        Starting from <span className="text-lg">{service.price}</span>
+                      <p className="font-semibold text-primary">
+                        Starting from <span className="text-lg font-bold">{service.price}</span>
                       </p>
                     )}
                     

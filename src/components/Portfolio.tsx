@@ -109,15 +109,15 @@ const ProjectCard = ({
     };
   }, [index]);
 
-  // Updated size classes to make images larger and fill viewport better
+  // Fixed size classes to ensure proper layout
   const getSizeClasses = () => {
     switch (project.size) {
       case "large":
-        return "col-span-12 md:col-span-12 lg:col-span-8 h-[70vh] md:h-[85vh]";
+        return "col-span-12 md:col-span-8 h-[70vh] md:h-[85vh]";
       case "medium":
-        return "col-span-12 md:col-span-6 lg:col-span-6 h-[60vh] md:h-[75vh]";
+        return "col-span-12 md:col-span-6 h-[60vh] md:h-[75vh]";
       case "small":
-        return "col-span-12 md:col-span-6 lg:col-span-4 h-[50vh] md:h-[65vh]";
+        return "col-span-12 md:col-span-4 h-[50vh] md:h-[65vh]";
       default:
         return "col-span-12 md:col-span-6 h-[60vh] md:h-[80vh]";
     }
@@ -279,8 +279,11 @@ export default function Portfolio() {
         </div>
       </div>
       
-      <div className="grid grid-cols-12 gap-4 md:gap-6">
-        {projects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} />)}
+      {/* Fix: Proper grid layout with gap for portfolio items */}
+      <div className="grid grid-cols-12 gap-4 md:gap-6 px-4">
+        {projects.map((project, index) => (
+          <ProjectCard key={project.id} project={project} index={index} />
+        ))}
       </div>
     </section>
   );

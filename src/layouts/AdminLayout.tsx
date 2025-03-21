@@ -120,17 +120,20 @@ export default function AdminLayout() {
                 Logout
               </Button>
               
+              {/* Enhanced Theme Toggle Button */}
               <Button
                 variant="outline"
                 size="icon"
                 onClick={toggleTheme}
                 title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                className="animate-pulse-subtle hover:animate-none relative overflow-hidden"
               >
                 {theme === "dark" ? (
-                  <Sun className="h-4 w-4" />
+                  <Sun className="h-4 w-4 transition-all" />
                 ) : (
-                  <Moon className="h-4 w-4" />
+                  <Moon className="h-4 w-4 transition-all" />
                 )}
+                <span className="absolute inset-0 bg-primary/10 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></span>
               </Button>
             </div>
           </div>
