@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
@@ -137,7 +136,7 @@ const ProjectCard = ({
   };
 
   return (
-    <Link to={`/portfolio/${project.id}`} className="block">
+    <Link to={`/portfolio/${project.id}`} className="block col-span-12 md:col-span-4 lg:col-span-4">
       <div 
         ref={cardRef} 
         data-cursor="design" 
@@ -279,10 +278,15 @@ export default function Portfolio() {
         </div>
       </div>
       
-      {/* Fix: Proper grid layout with gap for portfolio items */}
-      <div className="grid grid-cols-12 gap-4 md:gap-6 px-4">
+      {/* Fixed grid layout for portfolio items */}
+      <div className="grid grid-cols-12 gap-8 px-4 md:px-8">
         {projects.map((project, index) => (
-          <ProjectCard key={project.id} project={project} index={index} />
+          <div key={project.id} className={`
+            col-span-12
+            ${project.size === "large" ? "md:col-span-8" : project.size === "medium" ? "md:col-span-6" : "md:col-span-4"}
+          `}>
+            <ProjectCard project={project} index={index} />
+          </div>
         ))}
       </div>
     </section>
