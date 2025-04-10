@@ -136,56 +136,58 @@ const ProjectCard = ({
   };
 
   return (
-    <Link to={`/portfolio/${project.id}`} className="block col-span-12 md:col-span-4 lg:col-span-4">
-      <div 
-        ref={cardRef} 
-        data-cursor="design" 
-        className={`group relative overflow-hidden transition-all duration-700 ${getSizeClasses()} ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`} 
-        onMouseEnter={() => setIsHovered(true)} 
-        onMouseLeave={() => setIsHovered(false)} 
-        style={{
-          transitionDelay: `${index * 150}ms`
-        }}
-      >
-        <div className="absolute inset-0 h-full w-full">
-          <img 
-            src={project.image} 
-            alt={project.title} 
-            className="object-cover w-full h-full transition-transform duration-1000 ease-out" 
-            style={{
-              transform: isHovered ? `scale(1.05) translate(${normalizedX * 5}px, ${normalizedY * 5}px)` : 'scale(1)',
-              objectPosition: project.alignment === "left" ? "left center" : project.alignment === "right" ? "right center" : "center"
-            }} 
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-        </div>
-        
-        <div className={`absolute inset-0 flex flex-col ${getAlignmentClasses()} items-start p-10 md:p-16`}>
-          <div className={`max-w-lg transition-all duration-700 ${isHovered ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}`}>
-            <div className="mb-2 overflow-hidden">
-              <p className="text-sm tracking-widest uppercase text-white/70 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-100">
-                {project.category}
-              </p>
-            </div>
-            
-            <div className="overflow-hidden mb-4">
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-200">
-                {project.title}
-              </h3>
-            </div>
-            
-            <div className="overflow-hidden">
-              <div className="flex items-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-300">
-                <p className="text-sm text-white/70 mr-4">{project.year}</p>
-                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center transition-all duration-500 transform scale-0 group-hover:scale-100">
-                  <ArrowUpRight className="h-6 w-6 text-black" />
+    <div className={`${getSizeClasses()}`}>
+      <Link to={`/portfolio/${project.id}`} className="block h-full w-full">
+        <div 
+          ref={cardRef} 
+          data-cursor="design" 
+          className={`group relative overflow-hidden transition-all duration-700 h-full w-full ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`} 
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)} 
+          style={{
+            transitionDelay: `${index * 150}ms`
+          }}
+        >
+          <div className="absolute inset-0 h-full w-full">
+            <img 
+              src={project.image} 
+              alt={project.title} 
+              className="object-cover w-full h-full transition-transform duration-1000 ease-out" 
+              style={{
+                transform: isHovered ? `scale(1.05) translate(${normalizedX * 5}px, ${normalizedY * 5}px)` : 'scale(1)',
+                objectPosition: project.alignment === "left" ? "left center" : project.alignment === "right" ? "right center" : "center"
+              }} 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          </div>
+          
+          <div className={`absolute inset-0 flex flex-col ${getAlignmentClasses()} items-start p-10 md:p-16`}>
+            <div className={`max-w-lg transition-all duration-700 ${isHovered ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"}`}>
+              <div className="mb-2 overflow-hidden">
+                <p className="text-sm tracking-widest uppercase text-white/70 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-100">
+                  {project.category}
+                </p>
+              </div>
+              
+              <div className="overflow-hidden mb-4">
+                <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-200">
+                  {project.title}
+                </h3>
+              </div>
+              
+              <div className="overflow-hidden">
+                <div className="flex items-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 delay-300">
+                  <p className="text-sm text-white/70 mr-4">{project.year}</p>
+                  <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center transition-all duration-500 transform scale-0 group-hover:scale-100">
+                    <ArrowUpRight className="h-6 w-6 text-black" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
@@ -264,7 +266,7 @@ export default function Portfolio() {
   }, [projects]);
 
   return (
-    <section id="work" ref={sectionRef} className="py-24">
+    <section id="work" ref={sectionRef} className="py-24 w-full overflow-hidden">
       <div className="container px-4 md:px-12 mb-20">
         <div className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <div className="glass py-1 rounded-full inline-flex items-center mb-4 bg-background/5 backdrop-blur-md border-0 px-0">
@@ -278,15 +280,10 @@ export default function Portfolio() {
         </div>
       </div>
       
-      {/* Fixed grid layout for portfolio items */}
-      <div className="grid grid-cols-12 gap-8 px-4 md:px-8">
+      {/* Full-width grid container for portfolio items */}
+      <div className="grid grid-cols-12 gap-8 px-4 md:px-8 max-w-[100vw] w-full">
         {projects.map((project, index) => (
-          <div key={project.id} className={`
-            col-span-12
-            ${project.size === "large" ? "md:col-span-8" : project.size === "medium" ? "md:col-span-6" : "md:col-span-4"}
-          `}>
-            <ProjectCard project={project} index={index} />
-          </div>
+          <ProjectCard key={project.id} project={project} index={index} />
         ))}
       </div>
     </section>

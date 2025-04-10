@@ -85,22 +85,22 @@ export function ServiceBasicInfoForm({ form }: ServiceBasicInfoFormProps) {
                   <Input 
                     type="text" 
                     placeholder="Enter image URL (e.g. https://images.unsplash.com/...)" 
-                    value={value}
+                    value={value || ""}
                     onChange={(e) => {
                       onChange(e);
                       setServiceImagePreview(e.target.value);
                     }}
                     {...field} 
                   />
-                  <div className="relative">
+                  <div className="relative cursor-pointer">
                     <Input
                       type="file"
                       id="service-image-upload"
                       accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
                       onChange={(e) => handleImageUpload(e, "image")}
                     />
-                    <Button type="button" variant="outline" size="icon">
+                    <Button type="button" variant="outline" size="icon" className="pointer-events-none">
                       <Upload className="h-4 w-4" />
                     </Button>
                   </div>
@@ -153,22 +153,22 @@ export function ServiceBasicInfoForm({ form }: ServiceBasicInfoFormProps) {
                   <Input 
                     type="text" 
                     placeholder="Enter cover image URL for detail page" 
-                    value={value}
+                    value={value || ""}
                     onChange={(e) => {
                       onChange(e);
                       setCoverImagePreview(e.target.value);
                     }}
                     {...field} 
                   />
-                  <div className="relative">
+                  <div className="relative cursor-pointer">
                     <Input
                       type="file"
                       id="cover-image-upload"
                       accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
                       onChange={(e) => handleImageUpload(e, "coverImage")}
                     />
-                    <Button type="button" variant="outline" size="icon">
+                    <Button type="button" variant="outline" size="icon" className="pointer-events-none">
                       <Upload className="h-4 w-4" />
                     </Button>
                   </div>
