@@ -44,7 +44,7 @@ const formSchema = z.object({
   link: z.string().url("Invalid URL").optional().or(z.literal("")),
   image: z.string().min(1, "Featured image is required"),
   additionalImages: z.array(z.string()).optional(),
-  size: z.enum(["small", "medium", "large"]).default("medium"),
+  size: z.enum(["small", "medium", "large", "full", "col-8", "col-6", "col-4"]).default("medium"),
   alignment: z.enum(["left", "center", "right"]).default("center"),
   order: z.number().int().nonnegative().optional(),
 });
@@ -420,9 +420,13 @@ export default function PortfolioEdit() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="small">Small</SelectItem>
-                            <SelectItem value="medium">Medium</SelectItem>
-                            <SelectItem value="large">Large</SelectItem>
+                            <SelectItem value="full">Full Width (12 columns)</SelectItem>
+                            <SelectItem value="large">Large (8 columns)</SelectItem>
+                            <SelectItem value="col-8">Custom 8 columns</SelectItem>
+                            <SelectItem value="medium">Medium (6 columns)</SelectItem>
+                            <SelectItem value="col-6">Custom 6 columns</SelectItem>
+                            <SelectItem value="small">Small (4 columns)</SelectItem>
+                            <SelectItem value="col-4">Custom 4 columns</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

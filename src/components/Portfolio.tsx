@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useMousePosition } from "@/hooks/useMousePosition";
@@ -13,7 +14,7 @@ type Project = {
   date?: string;
   link?: string;
   year?: string;
-  size: "large" | "medium" | "small";
+  size: "large" | "medium" | "small" | "full" | "col-8" | "col-6" | "col-4";
   alignment: "left" | "center" | "right";
   additionalImages?: string[];
   url?: string;
@@ -112,12 +113,20 @@ const ProjectCard = ({
   // Size classes based on project size setting
   const getSizeClasses = () => {
     switch (project.size) {
+      case "full":
+        return "col-span-12 h-[90vh] md:h-[95vh]";
       case "large":
         return "col-span-12 md:col-span-8 h-[70vh] md:h-[85vh]";
       case "medium":
         return "col-span-12 md:col-span-6 h-[60vh] md:h-[75vh]";
       case "small":
         return "col-span-12 md:col-span-4 h-[50vh] md:h-[65vh]";
+      case "col-8":
+        return "col-span-12 md:col-span-8 h-[65vh] md:h-[80vh]";
+      case "col-6":
+        return "col-span-12 md:col-span-6 h-[55vh] md:h-[70vh]";
+      case "col-4":
+        return "col-span-12 md:col-span-4 h-[45vh] md:h-[60vh]";
       default:
         return "col-span-12 md:col-span-6 h-[60vh] md:h-[80vh]";
     }
@@ -208,8 +217,8 @@ export default function Portfolio() {
           // Map admin projects to our format with proper type checking for size and alignment
           const formattedProjects: Project[] = adminProjects.map((project: any) => {
             // Ensure size is one of the valid options
-            let size: "large" | "medium" | "small" = "medium";
-            if (project.size === "large" || project.size === "medium" || project.size === "small") {
+            let size: "large" | "medium" | "small" | "full" | "col-8" | "col-6" | "col-4" = "medium";
+            if (["large", "medium", "small", "full", "col-8", "col-6", "col-4"].includes(project.size)) {
               size = project.size;
             }
             
