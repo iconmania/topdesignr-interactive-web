@@ -208,21 +208,15 @@ export default function Portfolio() {
           // Map admin projects to our format with proper type checking for size and alignment
           const formattedProjects: Project[] = adminProjects.map((project: any) => {
             // Ensure size is one of the valid options
-            let size: "large" | "medium" | "small";
+            let size: "large" | "medium" | "small" = "medium";
             if (project.size === "large" || project.size === "medium" || project.size === "small") {
               size = project.size;
-            } else {
-              // Default size if invalid
-              size = "medium";
             }
             
             // Ensure alignment is one of the valid options
-            let alignment: "left" | "center" | "right";
+            let alignment: "left" | "center" | "right" = "center";
             if (project.alignment === "left" || project.alignment === "center" || project.alignment === "right") {
               alignment = project.alignment;
-            } else {
-              // Default alignment if invalid
-              alignment = "center";
             }
             
             return {
