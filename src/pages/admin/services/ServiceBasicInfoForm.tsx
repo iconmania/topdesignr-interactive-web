@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +16,8 @@ interface ServiceBasicInfoFormProps {
 export function ServiceBasicInfoForm({ form }: ServiceBasicInfoFormProps) {
   const [serviceImagePreview, setServiceImagePreview] = useState<string | null>(form.getValues("image") || null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(form.getValues("coverImage") || null);
+  const serviceImageInputRef = useRef<HTMLInputElement>(null);
+  const coverImageInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, fieldName: "image" | "coverImage") => {
     const file = e.target.files?.[0];
@@ -92,17 +94,23 @@ export function ServiceBasicInfoForm({ form }: ServiceBasicInfoFormProps) {
                     }}
                     {...field} 
                   />
-                  <div className="relative cursor-pointer">
-                    <Input
+                  <div className="relative">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => serviceImageInputRef.current?.click()}
+                      className="flex items-center gap-2 relative overflow-hidden group"
+                    >
+                      <Upload className="h-4 w-4 relative z-10 group-hover:text-white transition-colors" />
+                      <span className="absolute inset-0 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                    </Button>
+                    <input
+                      ref={serviceImageInputRef}
                       type="file"
-                      id="service-image-upload"
                       accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
+                      className="hidden"
                       onChange={(e) => handleImageUpload(e, "image")}
                     />
-                    <Button type="button" variant="outline" size="icon" className="pointer-events-none">
-                      <Upload className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               </FormControl>
@@ -160,17 +168,23 @@ export function ServiceBasicInfoForm({ form }: ServiceBasicInfoFormProps) {
                     }}
                     {...field} 
                   />
-                  <div className="relative cursor-pointer">
-                    <Input
+                  <div className="relative">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => coverImageInputRef.current?.click()}
+                      className="flex items-center gap-2 relative overflow-hidden group"
+                    >
+                      <Upload className="h-4 w-4 relative z-10 group-hover:text-white transition-colors" />
+                      <span className="absolute inset-0 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                    </Button>
+                    <input
+                      ref={coverImageInputRef}
                       type="file"
-                      id="cover-image-upload"
                       accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
+                      className="hidden"
                       onChange={(e) => handleImageUpload(e, "coverImage")}
                     />
-                    <Button type="button" variant="outline" size="icon" className="pointer-events-none">
-                      <Upload className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               </FormControl>

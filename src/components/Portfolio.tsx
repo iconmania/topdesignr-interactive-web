@@ -17,6 +17,7 @@ type Project = {
   alignment: "left" | "center" | "right";
   additionalImages?: string[];
   url?: string;
+  order?: number;
 };
 
 // Default projects if no admin data exists
@@ -108,7 +109,7 @@ const ProjectCard = ({
     };
   }, [index]);
 
-  // Fixed size classes to ensure proper layout
+  // Size classes based on project size setting
   const getSizeClasses = () => {
     switch (project.size) {
       case "large":
@@ -205,14 +206,14 @@ export default function Portfolio() {
         // Check if we have at least one valid project
         if (adminProjects && adminProjects.length > 0) {
           // Map admin projects to our format with proper type checking for size and alignment
-          const formattedProjects: Project[] = adminProjects.map((project: any, index: number) => {
+          const formattedProjects: Project[] = adminProjects.map((project: any) => {
             // Ensure size is one of the valid options
             let size: "large" | "medium" | "small";
             if (project.size === "large" || project.size === "medium" || project.size === "small") {
               size = project.size;
             } else {
-              // Default size based on index if invalid
-              size = index % 3 === 0 ? "large" : index % 3 === 1 ? "medium" : "small";
+              // Default size if invalid
+              size = "medium";
             }
             
             // Ensure alignment is one of the valid options
@@ -220,8 +221,8 @@ export default function Portfolio() {
             if (project.alignment === "left" || project.alignment === "center" || project.alignment === "right") {
               alignment = project.alignment;
             } else {
-              // Default alignment based on index if invalid
-              alignment = index % 3 === 0 ? "left" : index % 3 === 1 ? "center" : "right";
+              // Default alignment if invalid
+              alignment = "center";
             }
             
             return {
@@ -232,6 +233,14 @@ export default function Portfolio() {
               additionalImages: project.additionalImages || []
             };
           });
+          
+          // Sort projects by order if available
+          formattedProjects.sort((a, b) => {
+            const orderA = a.order !== undefined ? a.order : 999;
+            const orderB = b.order !== undefined ? b.order : 999;
+            return orderA - orderB;
+          });
+          
           setProjects(formattedProjects);
         }
       } catch (error) {

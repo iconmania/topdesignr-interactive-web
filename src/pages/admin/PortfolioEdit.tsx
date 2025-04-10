@@ -18,6 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
 // Form schema
@@ -30,6 +37,9 @@ const formSchema = z.object({
   date: z.string().optional(),
   link: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   additionalImages: z.array(z.string()).optional(),
+  size: z.enum(["small", "medium", "large"]).default("medium"),
+  alignment: z.enum(["left", "center", "right"]).default("center"),
+  order: z.number().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -43,6 +53,7 @@ export default function PortfolioEdit() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [additionalImages, setAdditionalImages] = useState<string[]>([]);
   const [additionalImagePreviews, setAdditionalImagePreviews] = useState<string[]>([]);
+  const [nextOrder, setNextOrder] = useState<number>(0);
 
   // Initialize form with default values
   const form = useForm<FormValues>({
@@ -55,13 +66,29 @@ export default function PortfolioEdit() {
       client: "",
       date: "",
       link: "",
-      additionalImages: []
+      additionalImages: [],
+      size: "medium",
+      alignment: "center",
+      order: 0
     }
   });
 
   useEffect(() => {
     if (id === "new") {
       setIsNewItem(true);
+      
+      // Get the next available order number for new items
+      const savedPortfolio = localStorage.getItem("adminPortfolio");
+      if (savedPortfolio) {
+        const portfolioItems = JSON.parse(savedPortfolio);
+        const maxOrder = portfolioItems.reduce((max: number, item: any) => 
+          Math.max(max, item.order || 0), 0);
+        setNextOrder(maxOrder + 1);
+        form.setValue("order", maxOrder + 1);
+      } else {
+        form.setValue("order", 1);
+      }
+      
       return;
     }
 
@@ -87,7 +114,10 @@ export default function PortfolioEdit() {
         client: portfolioItem.client || "",
         date: portfolioItem.date || "",
         link: portfolioItem.link || "",
-        additionalImages: portfolioItem.additionalImages || []
+        additionalImages: portfolioItem.additionalImages || [],
+        size: portfolioItem.size || "medium",
+        alignment: portfolioItem.alignment || "center",
+        order: portfolioItem.order || 0
       });
       
       if (portfolioItem.image) {
@@ -183,7 +213,8 @@ export default function PortfolioEdit() {
     // Prepare data with additional images
     const finalValues = {
       ...values,
-      additionalImages: additionalImages
+      additionalImages: additionalImages,
+      order: values.order || nextOrder
     };
 
     // Save to localStorage
@@ -296,10 +327,11 @@ export default function PortfolioEdit() {
                                 type="button"
                                 variant="outline"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="flex items-center gap-2"
+                                className="flex items-center gap-2 relative overflow-hidden group"
                               >
-                                <Upload className="h-4 w-4" />
-                                Upload Image
+                                <Upload className="h-4 w-4 relative z-10 group-hover:text-white transition-colors" />
+                                <span className="relative z-10 group-hover:text-white transition-colors">Upload Image</span>
+                                <span className="absolute inset-0 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
                               </Button>
                               <Input
                                 placeholder="Or enter image URL..."
@@ -389,6 +421,90 @@ export default function PortfolioEdit() {
                 </div>
               </div>
 
+              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <FormField
+                  control={form.control}
+                  name="size"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Card Size</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select card size" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="small">Small (4 columns)</SelectItem>
+                          <SelectItem value="medium">Medium (6 columns)</SelectItem>
+                          <SelectItem value="large">Large (8-12 columns)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Controls how much space the card takes in the grid
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="alignment"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Content Alignment</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select alignment" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="left">Left</SelectItem>
+                          <SelectItem value="center">Center</SelectItem>
+                          <SelectItem value="right">Right</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Controls how content aligns on the card
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="order"
+                  render={({ field: { value, onChange, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>Display Order</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          min="1"
+                          placeholder="Display position (1, 2, 3...)" 
+                          value={value || nextOrder}
+                          onChange={(e) => onChange(parseInt(e.target.value))}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Controls the order items appear in the portfolio grid
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <div className="mt-6">
                 <FormField
                   control={form.control}
@@ -424,10 +540,11 @@ export default function PortfolioEdit() {
                       type="button"
                       variant="outline"
                       onClick={() => document.getElementById('additionalImageUpload')?.click()}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 relative overflow-hidden group"
                     >
-                      <Plus className="h-4 w-4" />
-                      Add Image
+                      <Plus className="h-4 w-4 relative z-10 group-hover:text-white transition-colors" />
+                      <span className="relative z-10 group-hover:text-white transition-colors">Add Image</span>
+                      <span className="absolute inset-0 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
                     </Button>
                   </div>
                 </div>
